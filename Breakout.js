@@ -4,11 +4,11 @@ const ctx = cvs.getContext("2d");
 const Width_Of_Paddle = 100;
 const Height_Of_Paddle = 20;
 const PADDLE_MARGIN_BOTTOM = 50;
-const RADIUS_Of_Ball = 12;
+const RADIUS_Of_Ball = 10;
 
 // Background Image
 const BACKGROUND = new Image;
-BACKGROUND.src = "./Meridian.jpg";
+BACKGROUND.src = "./color.jpg";
 
 let leftArrow = false
 let rightArrow = false
@@ -20,8 +20,6 @@ let MAX_LEVEL = 3;
 let GAME_OVER = false;
 
 
-
-// Line width
 ctx.lineWidth = 3;
 
 const paddle = {
@@ -170,9 +168,26 @@ function Bricks_Draw() {
     }
 }
 
+// Ball bricks collision
 
+function Ball_With_Brick_Collision() {
+    for (let r = 0; r < brick.row; r++) {
+        for (let c = 0; c < brick.column; c++) {
+            let b = bricks[r][c];
+            if (b.status) {
+                if (ball.x + ball.radius > b.x && ball.x - ball.radius < b.x + brick.width && ball.y + ball.radius > b.y && ball.y - ball.radius < b.y + brick.height) {
+                    ball.dy = -ball.dy;
+                    b.status = false;
+                    SCORE += SCORE_COUNT;
+                }
+            }
+        }
+    }
+}
+
+// Display Score, Level, Life
 function DisplayGamePoints(text, textX, textY) {
-    ctx.fillStyle = "Orange";
+    ctx.fillStyle = "Black";
     ctx.font = "22px bold";
     ctx.fillText(text, textX, textY);
 
@@ -183,6 +198,31 @@ function Game_End() {
         GAME_OVER = true;
         DisplayGamePoints("Game Over", cvs.width / 2 - 50, cvs.height / 2);
         DisplayGamePoints("Play Again !", cvs.width / 2 - 50, cvs.height / 2 + 30);
+    }
+}
+
+//Level up
+function Level_Up() {
+    let isLevelDone = true;
+
+    for (let r = 0; r < brick.row; r++) {
+        for (let c = 0; c < brick.column; c++) {
+            isLevelDone = isLevelDone && !bricks[r][c].status;
+        }
+    }
+
+    if (isLevelDone) {
+        if (GAME_LEVEL >= MAX_LEVEL) {
+            GAME_OVER = true;
+            WIN_SOUND.play();
+            DisplayGamePoints("Win Win !", cvs.width / 2 - 45, cvs.height / 2);
+            return;
+        }
+        brick.row++;
+        Bricks_Creation();
+        ball.speed += 0.9;
+        Ball_Reset();
+        GAME_LEVEL++;
     }
 }
 
@@ -200,7 +240,9 @@ function update() {
     Ball_Move();
     Ball_With_Wall_Collision();
     Ball_With_Paddle_Collision();
+    Ball_With_Brick_Collision();
     Game_End();
+    Level_Up();
    
 }
 
