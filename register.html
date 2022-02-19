@@ -13,26 +13,26 @@
     <form>
 
       <div class="text">
-        <input type="text" required>
+        <input type="text" id="name" required>
         <label>Name</label>
       </div>
 
       <div class="text">
-        <input type="Gender" required>
+        <input type="Gender" id="gender" required>
         <label>Gender</label>
       </div>
 
       <div class="text">
-        <input type="text" required>
+        <input type="text" id="uname" required>
         <label>Username</label>
       </div>
 
       <div class="text">
-        <input type="password" required>
+        <input type="password" id="pass" required>
         <label>Password</label>
       </div>
 
-      <input type="submit" value="Register">
+      <input type="submit" value="Register" id="register">
 
       <div class="login_link">
         Already registered ? <a href="login.html">Login</a>
@@ -41,6 +41,37 @@
     </form>
   </div>
 
+  <!---------------------------------------CONFIGURATION---------------------------------------->
+  <script src = "https://www.gstatic.com/firebasejs/4.8.1/firebase.js"> </script>
+  <script>
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyDzBeh1scj-vECh-Rh2dQnLSf5O3XyTrGA",
+      authDomain: "breakout-game-3710f.firebaseapp.com",
+      projectId: "breakout-game-3710f",
+      storageBucket: "breakout-game-3710f.appspot.com",
+      messagingSenderId: "602197715891",
+      appId: "1:602197715891:web:5b01f760950f470c4ef9c6"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+    function writeUserData() {
+      let nameone = document.getElementById('name').value;
+      let genderone = document.getElementById('gender').value;
+      let usernameone = document.getElementById('uname').value;
+      let passwordone = document.getElementById('pass').value;
+      let data = {
+        name: nameone,
+        gender: genderone,
+        username: usernameone,
+        password: passwordone
+      };
+      const ref = db.ref('users');
+      let id = ref.push(data);
+    }
+      var register = document.getElementById('register');
+      register.addEventListener('click', writeUserData);
+  </script>
 </body>
 
 </html>

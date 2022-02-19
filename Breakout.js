@@ -4,19 +4,19 @@ const ctx = cvs.getContext("2d");
 const Width_Of_Paddle = 100;
 const Height_Of_Paddle = 20;
 const PADDLE_MARGIN_BOTTOM = 50;
-const RADIUS_Of_Ball = 10;
+const RADIUS_Of_Ball = 12;
 
 // Background Image
 const BACKGROUND = new Image;
-BACKGROUND.src = "./color.jpg";
+BACKGROUND.src = "./color1.jpg";
 
-let leftArrow = false
-let rightArrow = false
+let leftArrow = false;
+let rightArrow = false;
 let LIFE = 3;
 let SCORE = 0;
 let SCORE_COUNT = 10;
 let GAME_LEVEL = 1;
-let MAX_LEVEL = 3;
+let MAX_LEVEL = 5;
 let GAME_OVER = false;
 
 
@@ -110,6 +110,12 @@ function Ball_Reset() {
     ball.dy = -3;
 }
 
+function Reset_Life() {
+    if (GAME_LEVEL > 1) {
+        LIFE = 3;
+    }
+}
+
 function Ball_With_Paddle_Collision() {
     if (ball.x < paddle.x + paddle.width && ball.x > paddle.x && ball.y < paddle.y + paddle.height && ball.y > paddle.y) {
 
@@ -127,12 +133,12 @@ function Ball_With_Paddle_Collision() {
 const brick = {
     row: 2,
     column: 10,
-    width: 80,
+    width: 85,
     height: 25,
     offSetLeft: 20,
     offSetTop: 20,
     marginTop: 40,
-    fillColor: "navy",
+    fillColor: " #004080",
     strokeColor: "white"
 }
 
@@ -187,7 +193,7 @@ function Ball_With_Brick_Collision() {
 
 // Display Score, Level, Life
 function DisplayGamePoints(text, textX, textY) {
-    ctx.fillStyle = "Black";
+    ctx.fillStyle = "white";
     ctx.font = "22px bold";
     ctx.fillText(text, textX, textY);
 
@@ -212,9 +218,8 @@ function Level_Up() {
     }
 
     if (isLevelDone) {
-        if (GAME_LEVEL >= MAX_LEVEL) {
+        if (GAME_LEVEL == MAX_LEVEL) {
             GAME_OVER = true;
-            WIN_SOUND.play();
             DisplayGamePoints("Win Win !", cvs.width / 2 - 45, cvs.height / 2);
             return;
         }
@@ -223,6 +228,8 @@ function Level_Up() {
         ball.speed += 0.9;
         Ball_Reset();
         GAME_LEVEL++;
+        Reset_Life();
+
     }
 }
 
@@ -243,7 +250,7 @@ function update() {
     Ball_With_Brick_Collision();
     Game_End();
     Level_Up();
-   
+
 }
 
 function loop() {
@@ -257,6 +264,5 @@ function loop() {
         requestAnimationFrame(loop);
     }
 }
-
 loop();
 requestAnimationFrame(loop);
