@@ -42,35 +42,38 @@
   </div>
 
   <!---------------------------------------CONFIGURATION---------------------------------------->
-  <script src = "https://www.gstatic.com/firebasejs/4.8.1/firebase.js"> </script>
+  <script src="https://www.gstatic.com/firebasejs/4.8.1/firebase.js"> </script>
   <script>
-    // Your web app's Firebase configuration
+    // Firebase configuration
     const firebaseConfig = {
       apiKey: "AIzaSyDzBeh1scj-vECh-Rh2dQnLSf5O3XyTrGA",
       authDomain: "breakout-game-3710f.firebaseapp.com",
+      databaseURL: "https://breakout-game-3710f-default-rtdb.firebaseio.com",
       projectId: "breakout-game-3710f",
       storageBucket: "breakout-game-3710f.appspot.com",
       messagingSenderId: "602197715891",
       appId: "1:602197715891:web:5b01f760950f470c4ef9c6"
     };
+
+    // Insert Data In Database.
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
     function writeUserData() {
-      let nameone = document.getElementById('name').value;
-      let genderone = document.getElementById('gender').value;
-      let usernameone = document.getElementById('uname').value;
-      let passwordone = document.getElementById('pass').value;
+      let Name = document.getElementById('name').value;
+      let Gender = document.getElementById('gender').value;
+      let Username = document.getElementById('uname').value;
+      let Password = document.getElementById('pass').value;
       let data = {
-        name: nameone,
-        gender: genderone,
-        username: usernameone,
-        password: passwordone
+        name: Name,
+        gender: Gender,
+        uname: Username,
+        pass: Password
       };
-      const ref = db.ref('users');
+      const ref = db.ref('Registered Users');
       let id = ref.push(data);
     }
-      var register = document.getElementById('register');
-      register.addEventListener('click', writeUserData);
+    var register = document.getElementById('register');
+    register.addEventListener('click', writeUserData);
   </script>
 </body>
 

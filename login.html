@@ -5,6 +5,8 @@
   <meta charset="utf-8">
   <title>Login Form</title>
   <link rel="stylesheet" href="login.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 </head>
 
 <body>
@@ -13,18 +15,19 @@
     <form>
 
       <div class="text">
-        <input type="text" required>
+        <input type="text" id="UNAME" required>
         <label>Username</label>
       </div>
 
       <div class="text">
-        <input type="password" required>
+        <input type="password" id="PASSWORD" required>
         <label>Password</label>
       </div>
 
       <!-- <input type="submit" value="Login"> -->
       <div class="signup_link">
-        <a href="index.html"><input type="button" id="login">Login</a>
+        <!-- <a href=" "><input type="button" id="login">Login</a> -->
+        <button id="sanil" class="btn btn-success">Login</button>
       </div>
 
 
@@ -34,7 +37,74 @@
 
     </form>
   </div>
+  <script>
+    /*function fn(){
+      let user_name = document.getElementById('UNAME').value;
+      let user_pass = document.getElementById('PASSWORD').value;
+      alert( user_name+" "+user_pass);
+    }*/
+  </script>
 
+
+
+
+  <script type="module">
+
+    // Import the functions you need from the SDKs you need 
+
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.6/firebase-app.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDzBeh1scj-vECh-Rh2dQnLSf5O3XyTrGA",
+      authDomain: "breakout-game-3710f.firebaseapp.com",
+      databaseURL: "https://breakout-game-3710f-default-rtdb.firebaseio.com",
+      projectId: "breakout-game-3710f",
+      storageBucket: "breakout-game-3710f.appspot.com",
+      messagingSenderId: "602197715891",
+      appId: "1:602197715891:web:5b01f760950f470c4ef9c6"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    import { getDatabase, ref, get, set, child, update, remove }
+      from "https://www.gstatic.com/firebasejs/9.6.6/firebase-database.js";
+
+    const db = getDatabase();
+    
+    // document.getElementById("sanil").addEventListener('click', allScoreFetch);
+
+    // Retrive Data From DataBase
+    function allScoreFetch() {
+
+      const databaseRef = ref(db);
+
+      get(child(databaseRef, "Registered Users/")).then((snapshot) => {
+
+        if (typeof (snapshot) !== 'undefined') {
+          if (snapshot.exists()) {
+
+            let InpUname = document.getElementById("UNAME").value;
+            let InpPassword = document.getElementById('PASSWORD').value;
+
+            alert(InpUname);
+            alert(InpPassword);
+
+            snapshot.forEach((child) => {
+
+              console.log(child.val().uname);
+              console.log(child.val().pass);
+            });
+          }
+
+        }
+        else {
+          alert("Not Working!");
+        }
+      });
+
+    }
+    allScoreFetch();
+  </script>
 </body>
 
 </html>
