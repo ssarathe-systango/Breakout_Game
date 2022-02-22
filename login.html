@@ -44,7 +44,7 @@
       alert( user_name+" "+user_pass);
     }*/
   </script>
-
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/crypto-js.js"></script>
 
 
 
@@ -64,46 +64,86 @@
       appId: "1:602197715891:web:5b01f760950f470c4ef9c6"
     };
 
+
+
+    // document.getElementById("sanil").addEventListener('click', allScoreFetch);
+
+    // Retrive Data From DataBase
+    // function allScoreFetch() {
+
+    //   const databaseRef = ref(db);
+
+    //   get(child(databaseRef, "Registered Users/")).then((snapshot) => {
+
+    //     if (typeof (snapshot) !== 'undefined') {
+    //       if (snapshot.exists()) {
+
+    //         // let InpUname = document.getElementById("UNAME").value;
+    //         // let InpPassword = document.getElementById('PASSWORD').value;
+    //         snapshot.forEach((child) => {
+
+    //           // console.log(child.val().uname);
+    //           // console.log(child.val().pass);
+    //         });
+    //       }
+
+    //     }
+    //     else {
+    //       alert("Not Working!");
+    //     }
+    //   });
+
+    // }
+    // allScoreFetch();
+
+
+
     // Initialize Firebase
     const app = initializeApp(firebaseConfig);
     import { getDatabase, ref, get, set, child, update, remove }
       from "https://www.gstatic.com/firebasejs/9.6.6/firebase-database.js";
 
     const db = getDatabase();
-    
-    // document.getElementById("sanil").addEventListener('click', allScoreFetch);
 
-    // Retrive Data From DataBase
-    function allScoreFetch() {
-
+    function AuthenticateUser() {
       const databaseRef = ref(db);
 
-      get(child(databaseRef, "Registered Users/")).then((snapshot) => {
-
-        if (typeof (snapshot) !== 'undefined') {
-          if (snapshot.exists()) {
-
-            let InpUname = document.getElementById("UNAME").value;
-            let InpPassword = document.getElementById('PASSWORD').value;
-
-            alert(InpUname);
-            alert(InpPassword);
-
-            snapshot.forEach((child) => {
-
-              console.log(child.val().uname);
-              console.log(child.val().pass);
-            });
+      get(child(databaseRef, "Registered Users/" + UNAME.value)).then((snapshot) => {
+        if (snapshot.exists()) {
+          let dbuser = decuser(snapshot.val(), UNAME);
+          if (dbuser == UNAME.value) {
+            login();
           }
-
+          else {
+            alert('user does not exist');
+          }
         }
         else {
-          alert("Not Working!");
+          alert('username or password is invalid!');
         }
       });
-
     }
-    allScoreFetch();
+    AuthenticateUser();
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    function decuser(dbuser) {
+      var pass12 = CryptoJS.AES.decrypt(dbuser, PASSWORD.value);
+      return pass12.toString(CryptoJS.enc.Utf8);
+    }
+
+
+    function login(user) {
+      let keepLoggedIn = document.getElementById('UNAME').checked;
+
+      if (!keepLoggedIn) {
+        sessionStorage.setItem('user', JSON.stringify(user));
+        // window.location = "login.html";
+        
+      }
+    }
+
+
   </script>
 </body>
 

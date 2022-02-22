@@ -2,8 +2,8 @@ const cvs = document.getElementById("breakOut");
 const ctx = cvs.getContext("2d");
 
 const Width_Of_Paddle = 100;
-const Height_Of_Paddle = 20;
-const PADDLE_MARGIN_BOTTOM = 50;
+const Height_Of_Paddle = 15;
+const PADDLE_MARGIN_BOTTOM = 65;
 const RADIUS_Of_Ball = 12;
 
 // Background Image
@@ -20,7 +20,7 @@ let MAX_LEVEL = 5;
 let GAME_OVER = false;
 
 
-ctx.lineWidth = 3;
+ctx.lineWidth = 1.5;
 
 const paddle = {
     x: cvs.width / 2 - Width_Of_Paddle / 2,
@@ -132,15 +132,16 @@ function Ball_With_Paddle_Collision() {
 
 const brick = {
     row: 2,
-    column: 10,
-    width: 85,
-    height: 25,
+    column: 12,
+    width: 70,
+    height: 13,
     offSetLeft: 20,
     offSetTop: 20,
     marginTop: 40,
     fillColor: " #004080",
     strokeColor: "white"
 }
+let power = ['S', 'N', '+L', '-L', 'L', 'N', 'N', '+L', 'N', 'N', 'N', '-L', 'N', 'N', 'N', 'S', 'N', 'N', 'N', 'N']
 
 let bricks = [];
 
@@ -151,10 +152,19 @@ function Bricks_Creation() {
             bricks[r][c] = {
                 x: c * (brick.offSetLeft + brick.width) + brick.offSetLeft,
                 y: r * (brick.offSetTop + brick.height) + brick.offSetTop + brick.marginTop,
+                power: power[getRandomInt(0, power.length)],
                 status: true
             }
         }
     }
+}
+
+const COLORS = {
+    'S':'yellow',
+    'L':'blue',
+    'N':' ',
+    '+L':'green',
+    '-L':'red'
 }
 
 Bricks_Creation();
@@ -164,7 +174,7 @@ function Bricks_Draw() {
         for (let c = 0; c < brick.column; c++) {
             let b = bricks[r][c];
             if (b.status) {
-                ctx.fillStyle = brick.fillColor;
+                ctx.fillStyle = COLORS[b.power];
                 ctx.fillRect(b.x, b.y, brick.width, brick.height);
 
                 ctx.strokeStyle = brick.strokeColor;
@@ -181,9 +191,29 @@ function Ball_With_Brick_Collision() {
         for (let c = 0; c < brick.column; c++) {
             let b = bricks[r][c];
             if (b.status) {
-                if (ball.x + ball.radius > b.x && ball.x - ball.radius < b.x + brick.width && ball.y + ball.radius > b.y && ball.y - ball.radius < b.y + brick.height) {
+                if (ball.x + ball.radius > b.x && ball.x - ball.radius < b.x + brick.width && ball.y + ball.radius > b.y && ball.y - ball.radius < b.y + brick.height) 
+                {
                     ball.dy = -ball.dy;
                     b.status = false;
+
+                    switch(b.power)
+                    {
+                        case 'S':   paddle.width = paddle.width - 10;
+                                    break;
+
+                        case 'L':   paddle.width = paddle.width + 10;
+                                    break;
+
+                        case '-L':  if(LIFE>1)
+                                    {
+                                        LIFE = LIFE-1
+                                    }
+                                    break;
+
+                        case '+L':  LIFE = LIFE+1;
+                                    break;
+
+                    }
                     SCORE += SCORE_COUNT;
                 }
             }
@@ -213,7 +243,7 @@ function Level_Up() {
 
     for (let r = 0; r < brick.row; r++) {
         for (let c = 0; c < brick.column; c++) {
-            isLevelDone = isLevelDone && !bricks[r][c].status;
+            isLevelDone = isLevelDone && ! bricks[r][c].status;
         }
     }
 
@@ -225,10 +255,11 @@ function Level_Up() {
         }
         brick.row++;
         Bricks_Creation();
-        ball.speed += 0.9;
+        ball.speed += 1.0;
         Ball_Reset();
         GAME_LEVEL++;
         Reset_Life();
+        paddle.width = paddle.width - 20;
 
     }
 }
@@ -250,7 +281,6 @@ function update() {
     Ball_With_Brick_Collision();
     Game_End();
     Level_Up();
-
 }
 
 function loop() {
@@ -266,3 +296,9 @@ function loop() {
 }
 loop();
 requestAnimationFrame(loop);
+
+function getRandomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
