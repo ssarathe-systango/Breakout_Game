@@ -14,7 +14,7 @@ let leftArrow = false;
 let rightArrow = false;
 let LIFE = 3;
 let SCORE = 0;
-let SCORE_COUNT = 10;
+let SCORE_COUNT = 5; // you will get 10 points per brick collision
 let GAME_LEVEL = 1;
 let MAX_LEVEL = 5;
 let GAME_OVER = false;
@@ -134,14 +134,14 @@ const brick = {
     row: 2,
     column: 12,
     width: 70,
-    height: 13,
+    height: 15,
     offSetLeft: 20,
     offSetTop: 20,
     marginTop: 40,
     fillColor: " #004080",
     strokeColor: "white"
 }
-let power = ['S', 'N', '+L', '-L', 'L', 'N', 'N', '+L', 'N', 'N', 'N', '-L', 'N', 'N', 'N', 'S', 'N', 'N', 'N', 'N']
+let power = ['S', 'N', '+L', '-L', 'L', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N']
 
 let bricks = [];
 
@@ -153,18 +153,20 @@ function Bricks_Creation() {
                 x: c * (brick.offSetLeft + brick.width) + brick.offSetLeft,
                 y: r * (brick.offSetTop + brick.height) + brick.offSetTop + brick.marginTop,
                 power: power[getRandomInt(0, power.length)],
-                status: true
+                status: true,
+                // strength: (GAME_LEVEL<3)?getRandomInt(1, GAME_LEVEL):getRandomInt(0,3),
+                strength: getRandomInt(1, 2) // distroy bricks randomly, maximum 2 hit allowed.
             }
         }
     }
 }
 
 const COLORS = {
-    'S':'yellow',
-    'L':'blue',
-    'N':' ',
-    '+L':'green',
-    '-L':'red'
+    'S': 'yellow',  // reduce paddle length
+    'L': 'blue',    // increase paddle length
+    'N': 'white',
+    '+L': 'green',   // life++
+    '-L': 'red'      // life--
 }
 
 Bricks_Creation();
@@ -191,30 +193,37 @@ function Ball_With_Brick_Collision() {
         for (let c = 0; c < brick.column; c++) {
             let b = bricks[r][c];
             if (b.status) {
-                if (ball.x + ball.radius > b.x && ball.x - ball.radius < b.x + brick.width && ball.y + ball.radius > b.y && ball.y - ball.radius < b.y + brick.height) 
-                {
+                if (ball.x + ball.radius > b.x && ball.x - ball.radius < b.x + brick.width && ball.y + ball.radius > b.y && ball.y - ball.radius < b.y + brick.height) {
                     ball.dy = -ball.dy;
-                    b.status = false;
+                    b.strength = b.strength - 1;
 
-                    switch(b.power)
-                    {
-                        case 'S':   paddle.width = paddle.width - 10;
-                                    break;
+                    // when strength = 0 then brick will not destroy.
+                    if (b.strength === 0) {
+                        b.status = false;
+                    }
 
-                        case 'L':   paddle.width = paddle.width + 10;
-                                    break;
+                    // when brick will destroy, then score should be increase.
+                    if (b.strength === 0) {
+                        SCORE += SCORE_COUNT;
+                    }
 
-                        case '-L':  if(LIFE>1)
-                                    {
-                                        LIFE = LIFE-1
-                                    }
-                                    break;
+                    switch (b.power) {
+                        case 'S': paddle.width = paddle.width - 5;
+                            break;
 
-                        case '+L':  LIFE = LIFE+1;
-                                    break;
+                        case 'L': paddle.width = paddle.width + 15;
+                            break;
+
+                        case '-L': if (LIFE > 1) {
+                            LIFE = LIFE - 1
+                        }
+                            break;
+
+                        case '+L': LIFE = LIFE + 1;
+                            break;
 
                     }
-                    SCORE += SCORE_COUNT;
+                    // SCORE += SCORE_COUNT;
                 }
             }
         }
@@ -226,7 +235,6 @@ function DisplayGamePoints(text, textX, textY) {
     ctx.fillStyle = "white";
     ctx.font = "22px bold";
     ctx.fillText(text, textX, textY);
-
 }
 
 function Game_End() {
@@ -234,6 +242,7 @@ function Game_End() {
         GAME_OVER = true;
         DisplayGamePoints("Game Over", cvs.width / 2 - 50, cvs.height / 2);
         DisplayGamePoints("Play Again !", cvs.width / 2 - 50, cvs.height / 2 + 30);
+
     }
 }
 
@@ -243,7 +252,7 @@ function Level_Up() {
 
     for (let r = 0; r < brick.row; r++) {
         for (let c = 0; c < brick.column; c++) {
-            isLevelDone = isLevelDone && ! bricks[r][c].status;
+            isLevelDone = isLevelDone && !bricks[r][c].status;
         }
     }
 
@@ -255,13 +264,14 @@ function Level_Up() {
         }
         brick.row++;
         Bricks_Creation();
-        ball.speed += 1.0;
+        ball.speed += 0.9;
         Ball_Reset();
         GAME_LEVEL++;
         Reset_Life();
-        paddle.width = paddle.width - 20;
+        // paddle.width = paddle.width - 20;
 
     }
+
 }
 
 function Draw() {

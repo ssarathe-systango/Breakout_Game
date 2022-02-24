@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,21 +8,32 @@
     <title>Break Out Game</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Germania+One">
     <style>
-        body{
+        body {
             background: linear-gradient(to bottom, #ff9966 0%, #ff99cc 100%);
+        }
+
+        div a input {
+            background-color: whitesmoke;
+            border-radius: 10px;
+            border-color: black;
+            padding: 10px;
         }
     </style>
 </head>
+
 <body>
     <div>
-        <a href="Score.html" style="float: right;"><input type="button" value = "ShowScore" class="btn btn-success"></a>
-        <center><h1>Break Out Game</h1></center>
+        <a href="index.html" style="float: right;"><input type="button" value="Restart" class="btn btn-success"></a>
+        <center>
+            <h1>Break Out Game</h1>
+        </center>
     </div>
 
     <center>
-        <canvas id="breakOut" width="1100" height="560" style="border: 2px solid black"></canvas> 
+        <canvas id="breakOut" width="1100" height="560" style="border: 2px solid black"></canvas>
     </center>
 
 </body>
-<script src = "Breakout.js"></script>
+<script src="Breakout.js"></script>
+
 </html>

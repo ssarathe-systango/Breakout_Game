@@ -1,49 +1,28 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 
 <head>
   <meta charset="utf-8">
-  <title>Register Form</title>
-  <link rel="stylesheet" href="register.css">
+  <title>Register</title> 
+  <link rel="stylesheet" href="register1.css">
 </head>
 
 <body>
   <div class="center">
-    <h1><u>Register For Playing Breakout Game</u></h1>
-    <form>
-
-      <!-- <div class="text">
-        <input type="text" id="name" required>
-        <label>Name</label>
+    <center><h2><u>Register</u></h2></center>
+    <div id="form">
+      <div class="textfield">
+        Nickname <input type="text" id = "uname">
       </div>
 
-      <div class="text">
-        <input type="Gender" id="gender" required>
-        <label>Gender</label>
-      </div> -->
-
-      <div class="text">
-        <input type="text" id="uname" placeholder="Enter Your Nick Name" required>
-      </div>
-
-      <!-- <div class="text">
-        <input type="password" id="pass" required>
-        <label>Password</label>
-      </div> -->
-
-      <input type="submit" value="Register" id="register">
-      <!-- <a href="index.html" id = "register" required>Register</a> -->
-
-      <!-- <div class="login_link">
-        Already registered ? <a href="login.html">Login</a>
-      </div> -->
-
-    </form>
+      <a href="index.html"><button id="RegisterBtn">Submit</button></a>
+      
+    </div>
   </div>
 
   <!---------------------------------------CONFIGURATION---------------------------------------->
   <script src="https://www.gstatic.com/firebasejs/4.8.1/firebase.js"> </script>
-  <script>
+  <script type = "module">
     // Firebase configuration
     const firebaseConfig = {
       apiKey: "AIzaSyDzBeh1scj-vECh-Rh2dQnLSf5O3XyTrGA",
@@ -58,22 +37,65 @@
     // Insert Data In Database.
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
+
     function writeUserData() {
+
+      let Username = document.getElementById('uname').value;
+
       // let Name = document.getElementById('name').value;
       // let Gender = document.getElementById('gender').value;
-      let Username = document.getElementById('uname').value;
       // let Password = document.getElementById('pass').value;
+
       let data = {
         // name: Name,
         // gender: Gender,
         uname: Username,
         // pass: Password
       };
+
       const ref = db.ref('Registered Users');
       let id = ref.push(data);
     }
-    var register = document.getElementById('register');
+    var register = document.getElementById('RegisterBtn');
     register.addEventListener('click', writeUserData);
+
+
+    //----------------------------------------Retrive Data--------------------------------------------------//
+
+    // Retrive Data From DataBase
+
+    // const app = initializeApp(firebaseConfig);
+    // import { getDatabase, ref, get, set, child, update, remove }
+    //   from "https://www.gstatic.com/firebasejs/9.6.6/firebase-database.js";
+      
+    // document.getElementById("register").addEventListener('click', allScoreFetch);
+
+    // function allScoreFetch() {
+
+    //   const databaseRef = db.ref('Registered Users');
+
+    //   get(child(databaseRef, "Registered Users/")).then((snapshot) => {
+
+    //     if (typeof (snapshot) !== 'undefined') {
+    //       if (snapshot.exists()) {
+
+    //         let InpUname = document.getElementById("uname").value;
+    //         snapshot.forEach((child) => {
+
+    //           console.log(child.val().uname);
+    //           console.log(child.val().pass);
+    //         });
+    //       }
+
+    //     }
+    //     else {
+    //       alert("Not Working!");
+    //     }
+    //   });
+
+    // }
+    // allScoreFetch();
+
   </script>
 </body>
 
