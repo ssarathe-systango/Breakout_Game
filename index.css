@@ -1,0 +1,131 @@
+.body {
+    /* background: linear-gradient(to bottom, #ff9966 0%, #ff99cc 100%); */
+    animation-name: animation_breakout;
+    animation-duration: 10s;
+    background-color: gainsboro;
+    animation-iteration-count: 50;
+}
+
+/* div a input {
+    background-color: white;
+    border-radius: 10px;
+    border-color: black;
+    padding: 10px;
+} */
+#btn1 {
+    background-color: rgb(34, 122, 194);
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: bold;
+    padding: 10px;
+    margin-right: 90px;
+}
+
+#btn2 {
+    background-color: rgb(34, 122, 194);
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: bold;
+    padding: 10px;
+    margin-left: 90px;
+}
+
+@keyframes animation_breakout {
+    15% {
+        background-color: crimson;
+    }
+
+    25% {
+        /* background-color: lightseagreen; */
+        background-color: yellow;
+    }
+
+    50% {
+        background-color: lightslategray;
+        background-color: darkorchid;
+    }
+
+    80% {
+        background-color: lightyellow;
+        background-color: maroon;
+    }
+}
+
+.h1 {
+    font-family: cursive;
+}
+
+
+/* / Custom Modal CSS / */
+.modal_wrapper .modal-content {
+    background-image: url('./images/bg.jpg');
+    background-position: center center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    min-height: 450px;
+}
+
+.modal_wrapper .btn-close {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 25px;
+    width: 25px;
+    line-height: 25px;
+    font-weight: bold;
+    background-color: var(--yellow-color);
+    opacity: 1;
+    font-size: 12px;
+}
+
+.modal_wrapper .modal-body {
+    padding: 30px 50px;
+    margin: 50px;
+    border-radius: 6px;
+    background-color: rgba(154, 156, 158, 0.8);
+    display: flex;
+    align-items: center;
+}
+
+.modal_wrapper p {
+    font-weight: 500;
+}
+
+.modal_wrapper input[type="text"] {
+    width: 80%;
+    border: 0;
+    padding: 16px;
+}
+
+.modal_wrapper input[type="text"]:focus {
+    box-shadow: none;
+}
+
+.modal_wrapper .btn_submit {
+    padding: 16px;
+}
+
+@media (max-width:991px) {
+    .modal_wrapper .modal-body {
+        padding: 20px;
+        margin: 30px;
+    }
+
+    .modal_wrapper p {
+        font-size: 14px;
+    }
+
+    .modal_wrapper input[type="text"],
+    .modal_wrapper .btn_submit {
+        width: 100%;
+    }
+}
+
+
+:root {
+    /* / Background Color / */
+    --yellow-color: #078fff;
+
+    /* / font Family / */
+    --primary-font: 'Poppins', sans-serif;
+}

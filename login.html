@@ -100,31 +100,31 @@
 
 
     // Initialize Firebase
-    const app = initializeApp(firebaseConfig);
-    import { getDatabase, ref, get, set, child, update, remove }
-      from "https://www.gstatic.com/firebasejs/9.6.6/firebase-database.js";
+    // const app = initializeApp(firebaseConfig);
+    // import { getDatabase, ref, get, set, child, update, remove }
+    //   from "https://www.gstatic.com/firebasejs/9.6.6/firebase-database.js";
 
-    const db = getDatabase();
+    // const db = getDatabase();
 
-    function AuthenticateUser() {
-      const databaseRef = ref(db);
+    // function AuthenticateUser() {
+    //   const databaseRef = ref(db);
 
-      get(child(databaseRef, "Registered Users/" + UNAME.value)).then((snapshot) => {
-        if (snapshot.exists()) {
-          let dbuser = decuser(snapshot.val(), UNAME);
-          if (dbuser == UNAME.value) {
-            login();
-          }
-          else {
-            alert('user does not exist');
-          }
-        }
-        else {
-          alert('username or password is invalid!');
-        }
-      });
-    }
-    AuthenticateUser();
+    //   get(child(databaseRef, "Registered Users/" + UNAME.value)).then((snapshot) => {
+    //     if (snapshot.exists()) {
+    //       let dbuser = decuser(snapshot.val(), UNAME);
+    //       if (dbuser == UNAME.value) {
+    //         login();
+    //       }
+    //       else {
+    //         alert('user does not exist');
+    //       }
+    //     }
+    //     else {
+    //       alert('username or password is invalid!');
+    //     }
+    //   });
+    // }
+    // AuthenticateUser();
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
