@@ -12,47 +12,46 @@
 <body>
   <div class="center">
     <h1>Login</h1>
-    <form>
-
+    <div class="myform">
       <div class="text">
-        <input type="text" id="UNAME" required>
-        <label>Username</label>
+        Username <input type="text" id="uname" required>
+
       </div>
 
       <div class="text">
-        <input type="password" id="PASSWORD" required>
-        <label>Password</label>
+        Password<input type="password" id="pass" required>
+
       </div>
 
       <!-- <input type="submit" value="Login"> -->
       <div class="signup_link">
         <!-- <a href=" "><input type="button" id="login">Login</a> -->
-        <button id="sanil" class="btn btn-success">Login</button>
+        <button id="click" onclick="Authentication()" class="btn btn-primary">Login</button>
       </div>
 
 
       <div class="signup_link">
         Not a member? <a href="register.html">Signup</a>
       </div>
-
-    </form>
+    </div>
   </div>
-  <script>
-    /*function fn(){
+  <!-- ------------------------------------------------------------------------------------------------------------------------------ -->
+  <!-- <script>
+    function fn(){
       let user_name = document.getElementById('UNAME').value;
       let user_pass = document.getElementById('PASSWORD').value;
       alert( user_name+" "+user_pass);
-    }*/
-  </script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/crypto-js.js"></script>
+    }
+  </script> -->
+  <script src="https://www.gstatic.com/firebasejs/4.8.1/firebase.js"> </script>
+
+  <script>
+
+    // document.getElementById("insert").addEventListener('click', insertUser);
 
 
+    //  import{intializaApp} from "https://www.gstatic.com/firebasejs/9.6.7/firebase-database.js";
 
-  <script type="module">
-
-    // Import the functions you need from the SDKs you need 
-
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.6/firebase-app.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyDzBeh1scj-vECh-Rh2dQnLSf5O3XyTrGA",
@@ -65,83 +64,49 @@
     };
 
 
-
-    // document.getElementById("sanil").addEventListener('click', allScoreFetch);
-
-    // Retrive Data From DataBase
-    
-    // function allScoreFetch() {
-
-    //   const databaseRef = ref(db);
-
-    //   get(child(databaseRef, "Registered Users/")).then((snapshot) => {
-
-    //     if (typeof (snapshot) !== 'undefined') {
-    //       if (snapshot.exists()) {
-
-    //         // let InpUname = document.getElementById("UNAME").value;
-    //         // let InpPassword = document.getElementById('PASSWORD').value;
-    //         snapshot.forEach((child) => {
-
-    //           // console.log(child.val().uname);
-    //           // console.log(child.val().pass);
-    //         });
-    //       }
-
-    //     }
-    //     else {
-    //       alert("Not Working!");
-    //     }
-    //   });
-
-    // }
-    // allScoreFetch();
-
-
-
     // Initialize Firebase
-    // const app = initializeApp(firebaseConfig);
+    // The entry point of Firebase SDKs. It holds common configuration and state for Firebase APIs. Most applications don't need to directly interact with FirebaseApp.
+
+
+    const app = firebase.initializeApp(firebaseConfig);
+
     // import { getDatabase, ref, get, set, child, update, remove }
-    //   from "https://www.gstatic.com/firebasejs/9.6.6/firebase-database.js";
+    //   from "https://www.gstatic.com/firebasejs/4.8.1/firebase-database.js";
 
-    // const db = getDatabase();
-
-    // function AuthenticateUser() {
-    //   const databaseRef = ref(db);
-
-    //   get(child(databaseRef, "Registered Users/" + UNAME.value)).then((snapshot) => {
-    //     if (snapshot.exists()) {
-    //       let dbuser = decuser(snapshot.val(), UNAME);
-    //       if (dbuser == UNAME.value) {
-    //         login();
-    //       }
-    //       else {
-    //         alert('user does not exist');
-    //       }
-    //     }
-    //     else {
-    //       alert('username or password is invalid!');
-    //     }
-    //   });
-    // }
-    // AuthenticateUser();
-
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    // function decuser(dbuser) {
-    //   var pass12 = CryptoJS.AES.decrypt(dbuser, PASSWORD.value);
-    //   return pass12.toString(CryptoJS.enc.Utf8);
-    // }
+    const db = firebase.database();
 
 
+
+    function Authentication() {
+      let Username = document.getElementById('uname').value;
+      let Password = document.getElementById('pass').value;
+      db.ref('Registered Users').once('value')
+        .then(function (snapshot) {
+          var count = 0;
+          snapshot.forEach((item) => {
+
+            var flag = false;
+            uname = item.val().uname;
+            pass = item.val().pass;
+            if (uname == Username && pass == Password) {
+              flag = true;
+              window.location = "index.html";
+            }
+            count++;
+            if (count == snapshot.numChildren()) {
+              if (flag == false) {
+                alert("Username Or Password Is Incorrect");
+              }
+            }
+          });
+        })
+        .catch((error) => {
+          console.log(error);
+          return false;
+        });
+    }
     function login(user) {
-      let keepLoggedIn = document.getElementById('UNAME').checked;
-
-      if (!keepLoggedIn) {
-        sessionStorage.setItem('user', JSON.stringify(user));
-        // window.location = "login.html";
-        
-      }
+      window.location = "index.html";
     }
 
 

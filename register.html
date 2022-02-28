@@ -9,13 +9,17 @@
 
 <body>
   <div class="center">
-    <center><h2><u>Register</u></h2></center>
+    <h1>Register</h1>
+
     <div id="form">
       <div class="textfield">
         Nickname <input type="text" id = "uname">
       </div>
-
-      <a href="index.html"><button id="RegisterBtn">Submit</button></a>
+      <div class="textfield">
+        Password <input type="password" id = "pass">
+      </div>
+      <button id="RegisterBtn">Submit</button>
+      <a href = "login.html" id = "RegisterBtn" >Login</button></a>
       
     </div>
   </div>
@@ -33,7 +37,6 @@
       messagingSenderId: "602197715891",
       appId: "1:602197715891:web:5b01f760950f470c4ef9c6"
     };
-
     // Insert Data In Database.
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
@@ -44,13 +47,13 @@
 
       // let Name = document.getElementById('name').value;
       // let Gender = document.getElementById('gender').value;
-      // let Password = document.getElementById('pass').value;
+      let Password = document.getElementById('pass').value;
 
       let data = {
         // name: Name,
         // gender: Gender,
         uname: Username,
-        // pass: Password
+         pass: Password
       };
 
       const ref = db.ref('Registered Users');

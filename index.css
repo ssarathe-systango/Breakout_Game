@@ -12,23 +12,37 @@
     border-color: black;
     padding: 10px;
 } */
-#btn1 {
+
+/* For Restart */
+#btn1 { 
     background-color: rgb(34, 122, 194);
     border-radius: 10px;
     font-size: 15px;
     font-weight: bold;
     padding: 10px;
-    margin-right: 90px;
+    margin-right: 160px;
 }
 
+/* For Instruction */
 #btn2 {
     background-color: rgb(34, 122, 194);
     border-radius: 10px;
     font-size: 15px;
     font-weight: bold;
     padding: 10px;
-    margin-left: 90px;
+    margin-left: 170px;
 }
+
+/* For Leader Board*/
+#btn3{
+    background-color: rgb(34, 122, 194);
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: bold;
+    padding: 10px;
+    margin-left: 320px;
+}
+
 
 @keyframes animation_breakout {
     15% {

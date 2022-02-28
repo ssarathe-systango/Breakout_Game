@@ -7,9 +7,39 @@ const Width_Of_Paddle = 100;
 const Height_Of_Paddle = 15;
 const PADDLE_MARGIN_BOTTOM = 65;
 const RADIUS_Of_Ball = 13;
-const obstacleWidth = 100;
-const obstacleHight = 15;
+const obstacleWidth = 90;
+const obstacleHight = 7;
 const obstacleMarginBottom = 350;
+
+
+// Sound Initilization
+const ballLost = new Audio();
+ballLost.src = ('./sounds/ball-lost.mp3');
+
+const breakout = new Audio();
+breakout.src = ('./sounds/breakout.mp3');
+
+const brickhit = new Audio();
+brickhit.src = ('./sounds/brick.mp3');
+
+const gameOvermusic = new Audio();
+gameOvermusic.src = ('./sounds/smb_mariodie.wav');
+
+const levelCompleted = new Audio();
+levelCompleted.src = ('./sounds/smb_stage_clear.wav');
+
+const music= new Audio();
+music.src = ('./sounds/music.mp3');
+
+const paddleHit = new Audio();
+paddleHit.src = ('./sounds/mixkit-negative-tone-interface-tap-2569.wav');
+
+const warning = new Audio();
+warning.src = ('./sounds/smb_warning.wav');
+
+const gameWon = new Audio();
+gameWon.src = ('.sounds/mixkit-video-game-win-2016.wav');
+
 
 // Background Image
 const BACKGROUND = new Image;
@@ -18,7 +48,8 @@ BACKGROUND.src = "./color1.jpg";
 // ---------------------------------------------------- variable declaration --------------------------------------------------//
 let leftArrow = false;
 let rightArrow = false;
-let maxLife = 3;
+let space = false;
+let maxLife = 4;
 let score = 0;
 let scoreCount = 5; // you will get 5 points per brick collision
 let gameLevel = 1;
@@ -26,7 +57,7 @@ let maxLevel = 5;
 let gameOver = false;
 
 // stroke width of paddle and bricks
-ctx.lineWidth = 2;
+ctx.lineWidth = 2.5;
 
 //------------------------------------------------------- Paddle Creation ----------------------------------------------------//
 const paddle = {
@@ -34,7 +65,7 @@ const paddle = {
     y: cvs.height - PADDLE_MARGIN_BOTTOM - Height_Of_Paddle,
     width: Width_Of_Paddle,
     height: Height_Of_Paddle,
-    dx: 5 // moving speed of paddle
+    dx: 6 // moving speed of paddle
 }
 
 function Paddle_Draw() {
@@ -60,6 +91,16 @@ document.addEventListener("keyup", function (event) {
         leftArrow = false;
     } else if (event.key === "ArrowRight") {
         rightArrow = false;
+    }
+});
+
+// binding space with start pause
+document.addEventListener("keypress", function (event) {
+    // console.log("space daba diya");
+    if (event.code === 'Space') {
+        // console.log("space daba diya");
+        pauseToggle();
+
     }
 });
 
@@ -118,6 +159,7 @@ function Ball_With_Wall_Collision() {
     if (ball.y + ball.radius > cvs.height) {
         maxLife--;
         Ball_Reset();
+        ballLost.play();
     }
 }
 //-------------------------------------------------------------------------------------------------------------------------------//
@@ -136,13 +178,11 @@ function Ball_Reset() {
 
 
 
-
 //----------------------------------------------------- Reset Life After Level Up -----------------------------------------------//
 function Reset_Life() {
     if (gameLevel > 1) {
-        maxLife = 3;
+        maxLife = 4;
     }
-
 }
 //------------------------------------------------------------------------------------------------------------------------------//
 
@@ -151,7 +191,7 @@ function Reset_Life() {
 //----------------------------------------------------- Ball / Paddle Collision ------------------------------------------------//
 function Ball_With_Paddle_Collision() {
     if (ball.x < paddle.x + paddle.width && ball.x > paddle.x && ball.y < paddle.y + paddle.height && ball.y > paddle.y) {
-
+        paddleHit.play();
         let collidePoint = ball.x - (paddle.x + paddle.width / 2);
 
         collidePoint = collidePoint / (paddle.width / 2);
@@ -172,7 +212,7 @@ const brick = {
     column: 2,
     width: 80,
     height: 15,
-    offSetLeft: 5,
+    offSetLeft: 8,
     offSetTop: 10,
     marginTop: 40,
     fillColor: " #004080",
@@ -195,7 +235,7 @@ const STROKCOLORS = {
 
 //------------------------------------------ Array for filling Random Color In Bricks --------------------------------------------//
 
-let power = ['S', 'N', '+L', '-L', 'L', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N']
+let power = ['N', 'L', 'N', 'N', 'N', 'N', 'S', 'N', 'N', 'N', '-L', 'N', '+L', 'N', 'N', 'N', 'N']
 
 //-------------------------------------------------------------------------------------------------------------------------------//
 
@@ -210,8 +250,8 @@ function Bricks_Creation() {
             bricks[r][c] = {
                 x: c * (brick.offSetLeft + brick.width) + brick.offSetLeft,
                 y: r * (brick.offSetTop + brick.height) + brick.offSetTop + brick.marginTop,
-                power: power[getRandomInt(0, power.length)],
-                status: true,
+                power: power[getRandomInt(0, power.length)], // Random loop is running 0 to power.length
+                status: true, // bricks cration status, if it will false bricks will not create
                 strength: getRandomInt(1, 2) // distroy bricks randomly, maximum 2 hit allowed.
             }
         }
@@ -250,7 +290,7 @@ function Ball_With_Brick_Collision() {
             if (b.status) {
                 if (ball.x + ball.radius > b.x && ball.x - ball.radius < b.x + brick.width && ball.y + ball.radius > b.y && ball.y - ball.radius < b.y + brick.height) {
                     ball.dy = -ball.dy;
-
+                    brickhit.play();
                     b.strength = b.strength - 1;
                     // when strength = 0 then brick will not destroy.
                     if (b.strength === 0) {
@@ -271,10 +311,13 @@ function Ball_With_Brick_Collision() {
 
                         case '-L': if (maxLife > 1) {
                             maxLife = maxLife - 1
+                            warning.play();
+                            // ball.speed += 1.5;
+                            // paddle.speed += 1.5;
                         }
                             break;
 
-                        case '+L': if (maxLife < 3) {
+                        case '+L': if (maxLife < 4) {
                             maxLife = maxLife + 1
                         }
                             break;
@@ -305,12 +348,12 @@ function DisplayGamePoints(text, textX, textY) {
 function Game_End() {
     if (maxLife <= 0) {
         gameOver = true;
+        gameOvermusic.play();
         DisplayGamePoints("Game Over", cvs.width / 2 - 50, cvs.height / 2);
         DisplayGamePoints("Play Again !", cvs.width / 2 - 50, cvs.height / 2 + 30);
     }
 }
 //-------------------------------------------------------------------------------------------------------------------------------//
-
 
 
 
@@ -324,14 +367,17 @@ function Level_Up() {
     }
     if (isLevelDone) {
         if (gameLevel == maxLevel) {
+            gameWon.play();
             gameOver = true;
             DisplayGamePoints("Win Win !", cvs.width / 2 - 45, cvs.height / 2);
             return;
         }
+    levelCompleted.play();
+
         brick.row++;
         Bricks_Creation();
-        ball.speed += 0.9; //on level up ball speed will increase
-        paddle.dx += 2.0; // on level up paddle speed will increase
+        ball.speed += 0.6; //on level up ball speed will increase
+        paddle.dx += 0.6; // on level up paddle speed will increase
         // brick.offSetTop += 30;
         Ball_Reset();
         gameLevel++;
@@ -363,7 +409,7 @@ function obstacleFirst() {
         ctx.strokeRect(OBSTACLE.x + 300, OBSTACLE.y + 100, OBSTACLE.width, OBSTACLE.height);
 
 
-        ctx.fillStyle = "black";
+        ctx.fillStyle = "red";
         ctx.fillRect(OBSTACLE.x - 300, OBSTACLE.y + 100, OBSTACLE.width, OBSTACLE.height);
 
         ctx.strokeStyle = "white";
@@ -378,25 +424,27 @@ function obstacleFirst() {
 function obstacleSecond() {
     // Left Obstacle
     if (gameLevel === 3) {
-        ctx.fillStyle = "black";
-        ctx.fillRect(OBSTACLE.x, OBSTACLE.y + 80, OBSTACLE.width, OBSTACLE.height);
 
-        ctx.strokeStyle = "white";
-        ctx.strokeRect(OBSTACLE.x, OBSTACLE.y + 80, OBSTACLE.width, OBSTACLE.height);
-
-
-        ctx.fillStyle = "black";
-        ctx.fillRect(OBSTACLE.x + 300, OBSTACLE.y + 100, OBSTACLE.width, OBSTACLE.height);
-
-        ctx.strokeStyle = "white";
-        ctx.strokeRect(OBSTACLE.x + 300, OBSTACLE.y + 100, OBSTACLE.width, OBSTACLE.height);
-
-
-        ctx.fillStyle = "black";
+        //left obstacle
+        ctx.fillStyle = "red";
         ctx.fillRect(OBSTACLE.x - 300, OBSTACLE.y + 100, OBSTACLE.width, OBSTACLE.height);
 
         ctx.strokeStyle = "white";
         ctx.strokeRect(OBSTACLE.x - 300, OBSTACLE.y + 100, OBSTACLE.width, OBSTACLE.height);
+
+        //middle obstacle
+        ctx.fillStyle = "black";
+        ctx.fillRect(OBSTACLE.x, OBSTACLE.y + 10, OBSTACLE.width, OBSTACLE.height);
+
+        ctx.strokeStyle = "white";
+        ctx.strokeRect(OBSTACLE.x, OBSTACLE.y + 10, OBSTACLE.width, OBSTACLE.height);
+
+        // right obstacle
+        ctx.fillStyle = "yellow";
+        ctx.fillRect(OBSTACLE.x + 300, OBSTACLE.y + 100, OBSTACLE.width, OBSTACLE.height);
+
+        ctx.strokeStyle = "white";
+        ctx.strokeRect(OBSTACLE.x + 300, OBSTACLE.y + 100, OBSTACLE.width, OBSTACLE.height);
 
         obstacleFirstCollision();
         obstacleSecondCollision();
@@ -406,21 +454,47 @@ function obstacleSecond() {
 
 //--------------------------------------------------- Third Obstacle Draw -------------------------------------------------------//
 function obstacleThird() {
-    // Right Obstacle
     if (gameLevel === 4) {
-        // ctx.fillStyle = "black";
-        // ctx.fillRect(OBSTACLE.x + 300, OBSTACLE.y + 100, OBSTACLE.width, OBSTACLE.height);
+        //left obstacle
 
-        // ctx.strokeStyle = "white";
-        // ctx.strokeRect(OBSTACLE.x + 300, OBSTACLE.y + 100, OBSTACLE.width, OBSTACLE.height);
-        // obstacleThirdCollision();
+        ctx.fillStyle = "yellow";
+        ctx.fillRect(OBSTACLE.x - 300, OBSTACLE.y + 100, OBSTACLE.width, OBSTACLE.height);
+
+        ctx.strokeStyle = "white";
+        ctx.strokeRect(OBSTACLE.x - 300, OBSTACLE.y + 100, OBSTACLE.width, OBSTACLE.height);
+
+        //middle1 obstacle
+        ctx.fillStyle = "black";
+        ctx.fillRect(OBSTACLE.x, OBSTACLE.y + 10, OBSTACLE.width, OBSTACLE.height);
+
+        ctx.strokeStyle = "white";
+        ctx.strokeRect(OBSTACLE.x, OBSTACLE.y + 10, OBSTACLE.width, OBSTACLE.height);
+
+        //middle2 obstacle
+        ctx.fillStyle = "orange";
+        ctx.fillRect(OBSTACLE.x, OBSTACLE.y + 80, OBSTACLE.width, OBSTACLE.height);
+
+        ctx.strokeStyle = "white";
+        ctx.strokeRect(OBSTACLE.x, OBSTACLE.y + 80, OBSTACLE.width, OBSTACLE.height);
+
+        // right obstacle
+        ctx.fillStyle = "red";
+        ctx.fillRect(OBSTACLE.x + 300, OBSTACLE.y + 100, OBSTACLE.width, OBSTACLE.height);
+
+        ctx.strokeStyle = "white";
+        ctx.strokeRect(OBSTACLE.x + 300, OBSTACLE.y + 100, OBSTACLE.width, OBSTACLE.height);
+
+        obstacleFirstCollision();
+        obstacleSecondCollision();
+        obstacleThirdCollision();
+        obstacleFourthCollision();
     }
 }
 
 
 //------------------------------------------------ Collision With First Obstacle --------------------------------------------//
 function obstacleFirstCollision() {
-    if (ball.x + ball.radius > OBSTACLE.x && ball.x - ball.radius < OBSTACLE.x + OBSTACLE.width && ball.y + ball.radius > OBSTACLE.y + 80 && ball.y - ball.radius < OBSTACLE.y + 80 + OBSTACLE.height) {
+    if (ball.x + ball.radius > OBSTACLE.x && ball.x - ball.radius < OBSTACLE.x + OBSTACLE.width && ball.y + ball.radius > OBSTACLE.y + 10 && ball.y - ball.radius < OBSTACLE.y + 10 + OBSTACLE.height) {
         ball.dy = -ball.dy;
     }
 }
@@ -435,6 +509,12 @@ function obstacleSecondCollision() {
 //------------------------------------------------ Collision With Third Obstacle --------------------------------------------//
 function obstacleThirdCollision() {
     if (ball.x + ball.radius > OBSTACLE.x + 300 && ball.x - ball.radius < OBSTACLE.x + 300 + OBSTACLE.width && ball.y + ball.radius > OBSTACLE.y + 100 && ball.y - ball.radius < OBSTACLE.y + 100 + OBSTACLE.height) {
+        ball.dy = -ball.dy;
+    }
+}
+
+function obstacleFourthCollision() {
+    if (ball.x + ball.radius > OBSTACLE.x && ball.x - ball.radius < OBSTACLE.x + OBSTACLE.width && ball.y + ball.radius > OBSTACLE.y + 80 && ball.y - ball.radius < OBSTACLE.y + 80 + OBSTACLE.height) {
         ball.dy = -ball.dy;
     }
 }
@@ -468,21 +548,50 @@ function update() {
     Level_Up();
 }
 
+let isPause = false;
+function pauseToggle() {
+    if (isPause === false) {
+        isPause = true;
+    }
+    else {
+        isPause = false;
+    }
+    // console.log(isPause);
+}
 
 function loop() {
-    ctx.drawImage(BACKGROUND, 0, 0, 1200, 1000);
-
-    Draw();
-
-    update();
-
-    if (!gameOver) {
-        requestAnimationFrame(loop);
+ctx.drawImage(BACKGROUND, 0, 0, 1200, 1000);
+// music.play();
+Draw();
+if (!gameOver) {
+    if (isPause === false) {
+        update();
+        // console.log(isPause);
     }
+    else {
+        // console.log(isPause);
+    }
+}
+else{
+    update();
+    return;
+}
+requestAnimationFrame(loop);
 }
 loop();
 requestAnimationFrame(loop);
 
+
+// function loop() {
+//     ctx.drawImage(BACKGROUND, 0, 0, 1200, 1000);
+//     update();
+//     Draw();
+//     if (!gameOver) {
+//         requestAnimationFrame(loop);  
+//     }
+// }
+// loop();
+// requestAnimationFrame(loop);
 //----------------------------------------------------------------------------------------------------------------------//
 
 
