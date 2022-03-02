@@ -6,6 +6,13 @@
     animation-iteration-count: 50;
 }
 
+.div1{
+    animation-name: animation_breakout;
+    animation-duration: 10s;
+    background-color: gainsboro;
+    animation-iteration-count: 50;
+}
+
 /* div a input {
     background-color: white;
     border-radius: 10px;

@@ -4,31 +4,32 @@
 <head>
   <meta charset="utf-8">
   <title>Login Form</title>
-  <link rel="stylesheet" href="login.css">
+  <link rel="stylesheet" href="loginUpdated.css">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
     integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 </head>
 
-<body>
-  <div class="center">
-    <h1>Login</h1>
-    <div class="myform">
-      <div class="text">
-        Username <input type="text" id="uname" required>
 
+<body>
+
+  <div class="login-box">
+    <h1>Login</h1>
+    <div class="textbox">
+      <i class="fas fa-user"></i>
+      <div class="text">
+        <input type="text" id="uname" placeholder="Nickname" required>
       </div>
 
-      <div class="text">
-        Password<input type="password" id="pass" required>
-
+      <div class="textbox">
+        <i class="fas fa-lock"></i>
+        <input type="password" id="pass" placeholder="Password" required>
       </div>
 
       <!-- <input type="submit" value="Login"> -->
       <div class="signup_link">
         <!-- <a href=" "><input type="button" id="login">Login</a> -->
-        <button id="click" onclick="Authentication()" class="btn btn-primary">Login</button>
+        <button id="click" onclick = "Authentication()" class="btn">Login</button>
       </div>
-
 
       <div class="signup_link">
         Not a member? <a href="register.html">Signup</a>
@@ -36,21 +37,9 @@
     </div>
   </div>
   <!-- ------------------------------------------------------------------------------------------------------------------------------ -->
-  <!-- <script>
-    function fn(){
-      let user_name = document.getElementById('UNAME').value;
-      let user_pass = document.getElementById('PASSWORD').value;
-      alert( user_name+" "+user_pass);
-    }
-  </script> -->
   <script src="https://www.gstatic.com/firebasejs/4.8.1/firebase.js"> </script>
 
   <script>
-
-    // document.getElementById("insert").addEventListener('click', insertUser);
-
-
-    //  import{intializaApp} from "https://www.gstatic.com/firebasejs/9.6.7/firebase-database.js";
 
 
     const firebaseConfig = {
@@ -65,8 +54,6 @@
 
 
     // Initialize Firebase
-    // The entry point of Firebase SDKs. It holds common configuration and state for Firebase APIs. Most applications don't need to directly interact with FirebaseApp.
-
 
     const app = firebase.initializeApp(firebaseConfig);
 
@@ -76,7 +63,6 @@
     const db = firebase.database();
 
 
-
     function Authentication() {
       let Username = document.getElementById('uname').value;
       let Password = document.getElementById('pass').value;
@@ -84,17 +70,21 @@
         .then(function (snapshot) {
           var count = 0;
           snapshot.forEach((item) => {
-
             var flag = false;
             uname = item.val().uname;
             pass = item.val().pass;
-            if (uname == Username && pass == Password) {
+            console.log(uname);
+            console.log(pass);
+
+            if (uname === Username && pass === Password) {
               flag = true;
               window.location = "index.html";
+              // const mytimeout = setTimeout(alert("Login Successful"), 1000);
+
             }
             count++;
-            if (count == snapshot.numChildren()) {
-              if (flag == false) {
+            if (count === snapshot.numChildren()) {
+              if (flag = false) {
                 alert("Username Or Password Is Incorrect");
               }
             }
@@ -104,8 +94,10 @@
           console.log(error);
           return false;
         });
+
     }
     function login(user) {
+      // localStorage.setItem("CurrentUser", Username);
       window.location = "index.html";
     }
 

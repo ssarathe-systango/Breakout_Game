@@ -1,5 +1,6 @@
 //--------------------------------------------------- Break Out Game Using JavaScript -----------------------------------------//
 
+//-------------------------------------------------------------------------------------------------------------------------------//
 const cvs = document.getElementById("breakOut");
 const ctx = cvs.getContext("2d");
 
@@ -10,11 +11,12 @@ const RADIUS_Of_Ball = 13;
 const obstacleWidth = 90;
 const obstacleHight = 7;
 const obstacleMarginBottom = 350;
+const playerName = localStorage.getItem("user_name");
 
 
 // Sound Initilization
 const ballLost = new Audio();
-ballLost.src = ('./sounds/ball-lost.mp3');
+ballLost.src = ('./sounds/mixkit-fairy-cartoon-success-voice-344.wav');
 
 const breakout = new Audio();
 breakout.src = ('./sounds/breakout.mp3');
@@ -22,13 +24,13 @@ breakout.src = ('./sounds/breakout.mp3');
 const brickhit = new Audio();
 brickhit.src = ('./sounds/brick.mp3');
 
-const gameOvermusic = new Audio();
-gameOvermusic.src = ('./sounds/smb_mariodie.wav');
+// const gameOvermusic = new Audio();
+// gameOvermusic.src = ('./sounds/smb_mariodie.wav');
 
 const levelCompleted = new Audio();
 levelCompleted.src = ('./sounds/smb_stage_clear.wav');
 
-const music= new Audio();
+const music = new Audio();
 music.src = ('./sounds/music.mp3');
 
 const paddleHit = new Audio();
@@ -38,7 +40,9 @@ const warning = new Audio();
 warning.src = ('./sounds/smb_warning.wav');
 
 const gameWon = new Audio();
-gameWon.src = ('.sounds/mixkit-video-game-win-2016.wav');
+gameWon.src = ('.sounds/36499-08602501.mp3');
+
+
 
 
 // Background Image
@@ -208,8 +212,8 @@ function Ball_With_Paddle_Collision() {
 
 //--------------------------------------------------------- Bricks Creation ----------------------------------------------------//
 const brick = {
-    row: 1,
-    column: 2,
+    row: 2,
+    column: 12,
     width: 80,
     height: 15,
     offSetLeft: 8,
@@ -251,7 +255,7 @@ function Bricks_Creation() {
                 x: c * (brick.offSetLeft + brick.width) + brick.offSetLeft,
                 y: r * (brick.offSetTop + brick.height) + brick.offSetTop + brick.marginTop,
                 power: power[getRandomInt(0, power.length)], // Random loop is running 0 to power.length
-                status: true, // bricks cration status, if it will false bricks will not create
+                status: true, // bricks creation status, if it will false bricks will not create
                 strength: getRandomInt(1, 2) // distroy bricks randomly, maximum 2 hit allowed.
             }
         }
@@ -300,6 +304,7 @@ function Ball_With_Brick_Collision() {
                     // when brick will destroy, then score should be increase.
                     if (b.strength === 0) {
                         score += scoreCount;
+                        localStorage.setItem("score", score);
                     }
 
                     switch (b.power) {
@@ -346,15 +351,17 @@ function DisplayGamePoints(text, textX, textY) {
 
 //---------------------------------------------------- Game Over Condition ------------------------------------------------------//
 function Game_End() {
+
     if (maxLife <= 0) {
         gameOver = true;
-        gameOvermusic.play();
         DisplayGamePoints("Game Over", cvs.width / 2 - 50, cvs.height / 2);
         DisplayGamePoints("Play Again !", cvs.width / 2 - 50, cvs.height / 2 + 30);
+        window.location.href = "newpage.html";
     }
 }
-//-------------------------------------------------------------------------------------------------------------------------------//
 
+
+//-------------------------------------------------------------------------------------------------------------------------------//
 
 
 //-------------------------------------------------- Level Increase Condition ---------------------------------------------------//
@@ -367,12 +374,14 @@ function Level_Up() {
     }
     if (isLevelDone) {
         if (gameLevel == maxLevel) {
-            gameWon.play();
             gameOver = true;
-            DisplayGamePoints("Win Win !", cvs.width / 2 - 45, cvs.height / 2);
+            // DisplayGamePoints("Win Win !", cvs.width / 2 - 45, cvs.height / 2);
+            window.location.href = "congratulations.html";
+            gameWon.play();
             return;
         }
-    levelCompleted.play();
+        levelCompleted.play();
+        brick.marginTop += 20;
 
         brick.row++;
         Bricks_Creation();
@@ -456,7 +465,6 @@ function obstacleSecond() {
 function obstacleThird() {
     if (gameLevel === 4) {
         //left obstacle
-
         ctx.fillStyle = "yellow";
         ctx.fillRect(OBSTACLE.x - 300, OBSTACLE.y + 100, OBSTACLE.width, OBSTACLE.height);
 
@@ -483,11 +491,11 @@ function obstacleThird() {
 
         ctx.strokeStyle = "white";
         ctx.strokeRect(OBSTACLE.x + 300, OBSTACLE.y + 100, OBSTACLE.width, OBSTACLE.height);
-
         obstacleFirstCollision();
         obstacleSecondCollision();
         obstacleThirdCollision();
         obstacleFourthCollision();
+
     }
 }
 
@@ -526,19 +534,23 @@ function Draw() {
     Ball_Draw();
     Bricks_Draw();
     DisplayGamePoints("Score:" + score, 35, 25);
+    localStorage.setItem("score", score); // storing scores in local storage
+
     DisplayGamePoints("Life:" + maxLife, cvs.width - 85, 25);
     DisplayGamePoints("Level:" + gameLevel, cvs.width / 2 - 40, 25);
+    DisplayGamePoints(playerName, cvs.width / 1.4, 25);
     obstacleFirst();
     obstacleSecond();
     obstacleThird();
 }
+
 //----------------------------------------------------------------------------------------------------------------------//
 
 
 
 //---------------------------------------------- Calling Updation Functions ---------------------------------------//
 
-function update() {
+function update_all() {
     Paddle_Move();
     Ball_Move();
     Ball_With_Wall_Collision();
@@ -560,23 +572,23 @@ function pauseToggle() {
 }
 
 function loop() {
-ctx.drawImage(BACKGROUND, 0, 0, 1200, 1000);
-// music.play();
-Draw();
-if (!gameOver) {
-    if (isPause === false) {
-        update();
-        // console.log(isPause);
+    ctx.drawImage(BACKGROUND, 0, 0, 1200, 1000);
+    // music.play();
+    Draw();
+    if (!gameOver) {
+        if (isPause === false) {
+            update_all();
+            // console.log(isPause);
+        }
+        else {
+            // console.log(isPause);
+        }
     }
     else {
-        // console.log(isPause);
+        update_all();
+        return;
     }
-}
-else{
-    update();
-    return;
-}
-requestAnimationFrame(loop);
+    requestAnimationFrame(loop);
 }
 loop();
 requestAnimationFrame(loop);

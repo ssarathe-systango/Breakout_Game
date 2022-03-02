@@ -17,7 +17,7 @@
             color: rgb(0, 0, 0);
             text-align: center;
             /* font-style: italic; */
-            font-family:cursive;
+            font-family: cursive;
             font-weight: bolder;
         }
 
@@ -29,6 +29,7 @@
 </head>
 
 <body>
+
     <div class="container">
         <h1>Leader Board</h1>
 
@@ -41,28 +42,77 @@
                     <th scope="col">Score</td>
                 </tr>
             </thead>
-            <tbody>
-                <tr>
-                    <th scope="row">1</td>
-                    <td>Ajay</td>
-                    <td>Patna</td>
-                </tr>
-                <tr>
-                    <th scope="row">2</td>
-                    <td>Rahul</td>
-                    <td>Chandigarh</td>
-            
-                </tr>
-                <tr>
-                    <th scope="row">3</td>
-                    <td>Parush</td>
-                    <td>Kolkata</td>
+            <tbody id='tb1'>
 
-                </tr>
             </tbody>
         </table>
 
     </div>
+
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.7/firebase-app.js";
+
+        import { getDatabase, set, ref, child, get, onValue, update }
+            from "https://www.gstatic.com/firebasejs/9.6.7/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDzBeh1scj-vECh-Rh2dQnLSf5O3XyTrGA",
+            authDomain: "breakout-game-3710f.firebaseapp.com",
+            databaseURL: "https://breakout-game-3710f-default-rtdb.firebaseio.com",
+            projectId: "breakout-game-3710f",
+            storageBucket: "breakout-game-3710f.appspot.com",
+            messagingSenderId: "602197715891",
+            appId: "1:602197715891:web:5b01f760950f470c4ef9c6"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+
+        // const db = getDatabase();
+        const db = getDatabase();
+        let u_name = localStorage.getItem("user_name");
+        // const initialDataRef = ref(db, 'Registered Users');
+        const databaseRef = ref(db);
+        let dataArr = [];
+        get(child(databaseRef, "Registered Users/")).then((snapshot) => {
+            if (snapshot.exists()) {
+                snapshot.forEach(child => {
+                    // console.log(child.val());
+                    dataArr.push(child.val()); //array is created for sorting score
+                    console.log(dataArr);
+                    dataArr.sort(compareScores);
+                    let tb1 = document.getElementById("tb1");
+                    let tb1innerHtml = "";
+                    let counter = 1;
+                    dataArr.forEach(e => {
+                        console.log(typeof(e.score));
+                        tb1innerHtml = tb1innerHtml + `<tr>` +
+                            `<th scope="row">${counter}</td>` +
+                            `<td>${e.uname}</td>` +
+                            `<td>${e.score}</td>` +
+                            `</tr>`;
+                        counter++;
+                    });
+                    tb1.innerHTML = tb1innerHtml;
+                });
+            }
+        });
+        function compareScores(a, b) {
+            const score1 = parseInt(a.score);
+            const score2 = parseInt(b.score);
+            let comparison = 0;
+
+            if (score1 < score2) {
+                comparison = 1;
+            } else if (score1 > score2) {
+                comparison = -1;
+            }
+            return comparison;
+        }
+
+
+    </script>
 </body>
 
 </html>
