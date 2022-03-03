@@ -1,6 +1,9 @@
-//--------------------------------------------------- Break Out Game Using JavaScript -----------------------------------------//
+//************************************************* Break Out Game Using JavaScript ******************************************//
+//***************************************************************************************************************************//
 
-//-------------------------------------------------------------------------------------------------------------------------------//
+
+
+// -------------------------------------------------- Variable Initialization -------------------------------------------------// 
 const cvs = document.getElementById("breakOut");
 const ctx = cvs.getContext("2d");
 
@@ -12,9 +15,11 @@ const obstacleWidth = 90;
 const obstacleHight = 7;
 const obstacleMarginBottom = 350;
 const playerName = localStorage.getItem("user_name");
+//--------------------------------------------------------------------------------------------------------------------------------//
 
 
-// Sound Initilization
+
+// --------------------------------------------------------- Sound Initialization ------------------------------------------------//
 const ballLost = new Audio();
 ballLost.src = ('./sounds/mixkit-fairy-cartoon-success-voice-344.wav');
 
@@ -42,12 +47,16 @@ warning.src = ('./sounds/smb_warning.wav');
 const gameWon = new Audio();
 gameWon.src = ('.sounds/36499-08602501.mp3');
 
+// --------------------------------------------------------- Sound Initilization ------------------------------------------------//
 
 
 
-// Background Image
+
+// --------------------------------------------------------- Background Image -------------------------------------------------//
 const BACKGROUND = new Image;
 BACKGROUND.src = "./color1.jpg";
+
+
 
 // ---------------------------------------------------- variable declaration --------------------------------------------------//
 let leftArrow = false;
@@ -60,8 +69,9 @@ let gameLevel = 1;
 let maxLevel = 5;
 let gameOver = false;
 
-// stroke width of paddle and bricks
-ctx.lineWidth = 2.5;
+ctx.lineWidth = 2.5; // stroke width of paddle and bricks
+
+
 
 //------------------------------------------------------- Paddle Creation ----------------------------------------------------//
 const paddle = {
@@ -80,8 +90,9 @@ function Paddle_Draw() {
     ctx.strokeRect(paddle.x, paddle.y, paddle.width, paddle.height);
 }
 
-//---------------------------------------------------------- Paddle Move -------------------------------------------------------//
 
+
+//--------------------------------------------------- Paddle Move with Arrow Key --------------------------------------------------//
 document.addEventListener("keydown", function (event) {
     if (event.key === "ArrowLeft") {
         leftArrow = true;
@@ -98,7 +109,8 @@ document.addEventListener("keyup", function (event) {
     }
 });
 
-// binding space with start pause
+
+// ----------------------------------------------------- Binding space with start/pause -----------------------------------------//
 document.addEventListener("keypress", function (event) {
     // console.log("space daba diya");
     if (event.code === 'Space') {
@@ -108,6 +120,7 @@ document.addEventListener("keypress", function (event) {
     }
 });
 
+// ----------------------------------------------------- Paddle Move Function -------------------------------------------------//
 function Paddle_Move() {
     if (rightArrow && paddle.x + paddle.width < cvs.width) {
         paddle.x += paddle.dx;
@@ -116,8 +129,9 @@ function Paddle_Move() {
     }
 }
 
-//--------------------------------------------------------- Ball Creation ------------------------------------------------------//
 
+
+//--------------------------------------------------------- Ball Creation ------------------------------------------------------//
 const ball = {
     x: cvs.width / 2,
     y: paddle.y - RADIUS_Of_Ball,
@@ -142,8 +156,9 @@ function Ball_Draw() {
 
 }
 
-//----------------------------------------------------------- Ball Move ---------------------------------------------------------//
 
+
+//----------------------------------------------------------- Ball Move ---------------------------------------------------------//
 function Ball_Move() {
     ball.x += ball.dx;
     ball.y += ball.dy;
@@ -237,11 +252,14 @@ const STROKCOLORS = {
 }
 //---------------------------------------------------------------------------------------------------------------------------------//
 
+
+
 //------------------------------------------ Array for filling Random Color In Bricks --------------------------------------------//
 
 let power = ['N', 'L', 'N', 'N', 'N', 'N', 'S', 'N', 'N', 'N', '-L', 'N', '+L', 'N', 'N', 'N', 'N']
 
 //-------------------------------------------------------------------------------------------------------------------------------//
+
 
 
 //------------------------------------------------- Array for Bricks Creation --------------------------------------------------//
@@ -356,7 +374,7 @@ function Game_End() {
         gameOver = true;
         DisplayGamePoints("Game Over", cvs.width / 2 - 50, cvs.height / 2);
         DisplayGamePoints("Play Again !", cvs.width / 2 - 50, cvs.height / 2 + 30);
-        window.location.href = "newpage.html";
+        window.location.href = "gameover.html";
     }
 }
 
@@ -364,7 +382,7 @@ function Game_End() {
 //-------------------------------------------------------------------------------------------------------------------------------//
 
 
-//-------------------------------------------------- Level Increase Condition ---------------------------------------------------//
+//-------------------------------------------------- Game Level Increase ---------------------------------------------------//
 function Level_Up() {
     let isLevelDone = true;
     for (let r = 0; r < brick.row; r++) {
@@ -373,7 +391,7 @@ function Level_Up() {
         }
     }
     if (isLevelDone) {
-        if (gameLevel == maxLevel) {
+        if (gameLevel === maxLevel) {
             gameOver = true;
             // DisplayGamePoints("Win Win !", cvs.width / 2 - 45, cvs.height / 2);
             window.location.href = "congratulations.html";
@@ -381,17 +399,14 @@ function Level_Up() {
             return;
         }
         levelCompleted.play();
-        brick.marginTop += 20;
-
         brick.row++;
         Bricks_Creation();
         ball.speed += 0.6; //on level up ball speed will increase
         paddle.dx += 0.6; // on level up paddle speed will increase
-        // brick.offSetTop += 30;
+        brick.marginTop += 30;
         Ball_Reset();
         gameLevel++;
         Reset_Life();
-        // paddle.width = paddle.width - 20;
     }
 
 }
@@ -453,7 +468,7 @@ function obstacleSecond() {
         ctx.fillRect(OBSTACLE.x + 300, OBSTACLE.y + 100, OBSTACLE.width, OBSTACLE.height);
 
         ctx.strokeStyle = "white";
-        ctx.strokeRect(OBSTACLE.x + 300, OBSTACLE.y + 100, OBSTACLE.width, OBSTACLE.height);
+        ctx.strokeRect(OBSTACLE.x + 300, OBSTACLE.y + 100, OBSTACLE.width, OBSTACLE.height); 
 
         obstacleFirstCollision();
         obstacleSecondCollision();
@@ -465,6 +480,7 @@ function obstacleSecond() {
 function obstacleThird() {
     if (gameLevel === 4) {
         //left obstacle
+         
         ctx.fillStyle = "yellow";
         ctx.fillRect(OBSTACLE.x - 300, OBSTACLE.y + 100, OBSTACLE.width, OBSTACLE.height);
 
@@ -592,6 +608,8 @@ function loop() {
 }
 loop();
 requestAnimationFrame(loop);
+//--------------------------------------------------------------------------------------------------------------------------//
+
 
 
 // function loop() {
@@ -604,14 +622,20 @@ requestAnimationFrame(loop);
 // }
 // loop();
 // requestAnimationFrame(loop);
-//----------------------------------------------------------------------------------------------------------------------//
 
 
 
 
-//-------------------------------------- Function for generate random colors for bricks ------------------------------//
+//-------------------------------------------------------- Random Function--------------------------------------------------//
 function getRandomInt(min, max) {
     min = Math.ceil(min);
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
+//--------------------------------------------------------------------------------------------------------------------------//
+
+
+//******************************************************** The - End ****************************************************** //
+//************************************************************************************************************************ //
+
+

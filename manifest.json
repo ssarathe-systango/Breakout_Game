@@ -1,0 +1,22 @@
+{
+    "name": "Breakout Game",
+    "short_name": "Breakout",
+    "start_url": "./index.html",
+    "display": "standalone",
+    "background_color": "#4590ce",
+    "description": "play and chill",
+    "icons": [
+        {
+            "src": "./breakout192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any"
+        },
+        {
+            "src": "./breakout512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any"
+        }
+    ]
+}
