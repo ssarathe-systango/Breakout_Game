@@ -32,22 +32,22 @@ brickhit.src = ('./sounds/brick.mp3');
 // const gameOvermusic = new Audio();
 // gameOvermusic.src = ('./sounds/smb_mariodie.wav');
 
-const levelCompleted = new Audio();
+const levelCompleted = new Audio();  // Level Completed Sound
 levelCompleted.src = ('./sounds/smb_stage_clear.wav');
 
-const music = new Audio();
-music.src = ('./sounds/music.mp3');
+// const music = new Audio();  
+// music.src = ('./sounds/music.mp3');
 
-const paddleHit = new Audio();
-paddleHit.src = ('./sounds/mixkit-negative-tone-interface-tap-2569.wav');
+const paddleHit = new Audio();  
+paddleHit.src = ('./sounds/mixkit-negative-tone-interface-tap-2569.wav'); // Paddle Hit Sound
 
-const warning = new Audio();
-warning.src = ('./sounds/smb_warning.wav');
+const LifeDecrease = new Audio();
+LifeDecrease.src = ('./sounds/smb_warning.wav'); // On Hit Red Bricks
 
-const gameWon = new Audio();
-gameWon.src = ('.sounds/36499-08602501.mp3');
+const won = new Audio(); 
+won.src = ('.sounds/37028-08602201.mp3'); // game won sound
 
-// --------------------------------------------------------- Sound Initilization ------------------------------------------------//
+// ---------------------------------------------------------------------------------------------------------------------------//
 
 
 
@@ -330,11 +330,12 @@ function Ball_With_Brick_Collision() {
                             break;
 
                         case 'L': paddle.width = paddle.width + 15;
+                                breakout.play();
                             break;
 
                         case '-L': if (maxLife > 1) {
                             maxLife = maxLife - 1
-                            warning.play();
+                            LifeDecrease.play();
                             // ball.speed += 1.5;
                             // paddle.speed += 1.5;
                         }
@@ -374,10 +375,11 @@ function Game_End() {
         gameOver = true;
         DisplayGamePoints("Game Over", cvs.width / 2 - 50, cvs.height / 2);
         DisplayGamePoints("Play Again !", cvs.width / 2 - 50, cvs.height / 2 + 30);
+        // game over sound 
+
         window.location.href = "gameover.html";
     }
 }
-
 
 //-------------------------------------------------------------------------------------------------------------------------------//
 
@@ -395,7 +397,7 @@ function Level_Up() {
             gameOver = true;
             // DisplayGamePoints("Win Win !", cvs.width / 2 - 45, cvs.height / 2);
             window.location.href = "congratulations.html";
-            gameWon.play();
+            won.play();
             return;
         }
         levelCompleted.play();

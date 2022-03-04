@@ -25,9 +25,7 @@
         <input type="password" id="pass" placeholder="Password" required>
       </div>
 
-      <!-- <input type="submit" value="Login"> -->
       <div class="signup_link">
-        <!-- <a href=" "><input type="button" id="login">Login</a> -->
         <button id="click" onclick = "Authentication()" class="btn">Login</button>
       </div>
 
@@ -36,12 +34,12 @@
       </div>
     </div>
   </div>
-  <!-- ------------------------------------------------------------------------------------------------------------------------------ -->
+  <!-- ------------------------------------------------------------------------------------------------------------------------- -->
   <script src="https://www.gstatic.com/firebasejs/4.8.1/firebase.js"> </script>
 
   <script>
 
-
+    //-------------------------------------------------- Firebase Configuration --------------------------------------------------->
     const firebaseConfig = {
       apiKey: "AIzaSyDzBeh1scj-vECh-Rh2dQnLSf5O3XyTrGA",
       authDomain: "breakout-game-3710f.firebaseapp.com",
@@ -53,7 +51,7 @@
     };
 
 
-    // Initialize Firebase
+    //------------------------------------------------------ Initializing Firebase ------------------------------------------------>
 
     const app = firebase.initializeApp(firebaseConfig);
 
@@ -97,7 +95,6 @@
 
     }
     function login(user) {
-      // localStorage.setItem("CurrentUser", Username);
       window.location = "index.html";
     }
 

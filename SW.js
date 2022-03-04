@@ -17,6 +17,8 @@ const staticAssets = [
 './sounds/smb_mariodie.wav',
 './sounds/smb_stage_clear.wav',
 './sounds/smb_warning.wav',
+'./sounds/breakout.mp3',
+'.sounds/37028-08602201.mp3',
 'https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js',
 'https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css',
 'https://fonts.googleapis.com/css?family=Germania+One',
