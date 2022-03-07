@@ -25,16 +25,23 @@
             background-color: lightcoral;
         }
 
-        .heading{
+        .heading {
             color: white;
         }
     </style>
 </head>
 
 <body class="div1">
+    <script>
+        const Gamewon = new Audio();
+        Gamewon.src = ('./sounds/wonSound.mp3'); // game won sound
+    </script>
     <div>
-        <h1 class = "heading">Game Won!</h1>
-        <h2 class = "heading">Congratulations!</h2>
+        <h1 class="heading">Game Won!</h1>
+        <h2 class="heading">Congratulations!</h2>
+        <script>    
+            Gamewon.play();
+        </script>
         <a href="index.html" style="float: center;"><input type="button" value="Play Again" class="btn btn-primary"
                 id="btn3"></a>
 

@@ -29,23 +29,18 @@ breakout.src = ('./sounds/breakout.mp3');
 const brickhit = new Audio();
 brickhit.src = ('./sounds/brick.mp3');
 
-// const gameOvermusic = new Audio();
-// gameOvermusic.src = ('./sounds/smb_mariodie.wav');
-
 const levelCompleted = new Audio();  // Level Completed Sound
 levelCompleted.src = ('./sounds/smb_stage_clear.wav');
 
 // const music = new Audio();  
 // music.src = ('./sounds/music.mp3');
 
-const paddleHit = new Audio();  
+const paddleHit = new Audio();
 paddleHit.src = ('./sounds/mixkit-negative-tone-interface-tap-2569.wav'); // Paddle Hit Sound
 
 const LifeDecrease = new Audio();
 LifeDecrease.src = ('./sounds/smb_warning.wav'); // On Hit Red Bricks
 
-const won = new Audio(); 
-won.src = ('.sounds/37028-08602201.mp3'); // game won sound
 
 // ---------------------------------------------------------------------------------------------------------------------------//
 
@@ -55,13 +50,13 @@ won.src = ('.sounds/37028-08602201.mp3'); // game won sound
 // --------------------------------------------------------- Background Image -------------------------------------------------//
 const BACKGROUND = new Image;
 BACKGROUND.src = "./color1.jpg";
-
+//-----------------------------------------------------------------------------------------------------------------------------//
 
 
 // ---------------------------------------------------- variable declaration --------------------------------------------------//
 let leftArrow = false;
 let rightArrow = false;
-let space = false;
+let space = false; /// Bind Space for Start/Pause
 let maxLife = 4;
 let score = 0;
 let scoreCount = 5; // you will get 5 points per brick collision
@@ -70,6 +65,8 @@ let maxLevel = 5;
 let gameOver = false;
 
 ctx.lineWidth = 2.5; // stroke width of paddle and bricks
+// ---------------------------------------------------------------------------------------------------------------------------//
+
 
 
 
@@ -89,6 +86,7 @@ function Paddle_Draw() {
     ctx.strokeStyle = "yellow";
     ctx.strokeRect(paddle.x, paddle.y, paddle.width, paddle.height);
 }
+// ---------------------------------------------------------------------------------------------------------------------------//
 
 
 
@@ -108,6 +106,8 @@ document.addEventListener("keyup", function (event) {
         rightArrow = false;
     }
 });
+// ---------------------------------------------------------------------------------------------------------------------------//
+
 
 
 // ----------------------------------------------------- Binding space with start/pause -----------------------------------------//
@@ -119,6 +119,9 @@ document.addEventListener("keypress", function (event) {
 
     }
 });
+// ---------------------------------------------------------------------------------------------------------------------------//
+
+
 
 // ----------------------------------------------------- Paddle Move Function -------------------------------------------------//
 function Paddle_Move() {
@@ -128,6 +131,7 @@ function Paddle_Move() {
         paddle.x -= paddle.dx;
     }
 }
+// ---------------------------------------------------------------------------------------------------------------------------//
 
 
 
@@ -136,7 +140,7 @@ const ball = {
     x: cvs.width / 2,
     y: paddle.y - RADIUS_Of_Ball,
     radius: RADIUS_Of_Ball,
-    speed: 4,
+    speed: 4, // Initial Speed Of Ball
     dx: 3 * (Math.random() * 2 - 1),
     // angle of ball random numbers will be generate between +3 to -3 
     dy: -3
@@ -155,13 +159,15 @@ function Ball_Draw() {
     ctx.closePath();
 
 }
+// ---------------------------------------------------------------------------------------------------------------------------//
+
 
 
 
 //----------------------------------------------------------- Ball Move ---------------------------------------------------------//
 function Ball_Move() {
-    ball.x += ball.dx;
-    ball.y += ball.dy;
+    ball.x += ball.dx; // Ball Moving Direction up on x-Axis
+    ball.y += ball.dy; // Ball Moving Direction up on y- Axis
 }
 //-------------------------------------------------------------------------------------------------------------------------------//
 
@@ -270,8 +276,8 @@ function Bricks_Creation() {
         bricks[r] = [];
         for (let c = 0; c < brick.column; c++) {
             bricks[r][c] = {
-                x: c * (brick.offSetLeft + brick.width) + brick.offSetLeft,
-                y: r * (brick.offSetTop + brick.height) + brick.offSetTop + brick.marginTop,
+                x: c * (brick.offSetLeft + brick.width) + brick.offSetLeft, // for column
+                y: r * (brick.offSetTop + brick.height) + brick.offSetTop + brick.marginTop, // for row
                 power: power[getRandomInt(0, power.length)], // Random loop is running 0 to power.length
                 status: true, // bricks creation status, if it will false bricks will not create
                 strength: getRandomInt(1, 2) // distroy bricks randomly, maximum 2 hit allowed.
@@ -314,9 +320,10 @@ function Ball_With_Brick_Collision() {
                     ball.dy = -ball.dy;
                     brickhit.play();
                     b.strength = b.strength - 1;
-                    // when strength = 0 then brick will not destroy.
+
+                    // when strength = 0 then brick will destroy.
                     if (b.strength === 0) {
-                        b.status = false;
+                        b.status = false; //brick will destroy when status will set to false.
                     }
 
                     // when brick will destroy, then score should be increase.
@@ -330,11 +337,11 @@ function Ball_With_Brick_Collision() {
                             break;
 
                         case 'L': paddle.width = paddle.width + 15;
-                                breakout.play();
+                            breakout.play();
                             break;
 
                         case '-L': if (maxLife > 1) {
-                            maxLife = maxLife - 1
+                            // maxLife = maxLife - 1
                             LifeDecrease.play();
                             // ball.speed += 1.5;
                             // paddle.speed += 1.5;
@@ -380,8 +387,8 @@ function Game_End() {
         window.location.href = "gameover.html";
     }
 }
-
 //-------------------------------------------------------------------------------------------------------------------------------//
+
 
 
 //-------------------------------------------------- Game Level Increase ---------------------------------------------------//
@@ -389,7 +396,7 @@ function Level_Up() {
     let isLevelDone = true;
     for (let r = 0; r < brick.row; r++) {
         for (let c = 0; c < brick.column; c++) {
-            isLevelDone = isLevelDone && !bricks[r][c].status;
+            isLevelDone = isLevelDone && !bricks[r][c].status; // true + ture = move to next level otherwise stay on current level
         }
     }
     if (isLevelDone) {
@@ -397,7 +404,6 @@ function Level_Up() {
             gameOver = true;
             // DisplayGamePoints("Win Win !", cvs.width / 2 - 45, cvs.height / 2);
             window.location.href = "congratulations.html";
-            won.play();
             return;
         }
         levelCompleted.play();
@@ -422,6 +428,9 @@ const OBSTACLE = {
     width: obstacleWidth,
     height: obstacleHight,
 }
+// ---------------------------------------------------------------------------------------------------------------------------//
+
+
 
 //--------------------------------------------------- First Obstacle Draw -------------------------------------------------------//
 function obstacleFirst() {
@@ -445,6 +454,9 @@ function obstacleFirst() {
         obstacleThirdCollision();
     }
 }
+// ---------------------------------------------------------------------------------------------------------------------------//
+
+
 
 //--------------------------------------------------- Second Obstacle Draw -------------------------------------------------------//
 function obstacleSecond() {
@@ -470,19 +482,22 @@ function obstacleSecond() {
         ctx.fillRect(OBSTACLE.x + 300, OBSTACLE.y + 100, OBSTACLE.width, OBSTACLE.height);
 
         ctx.strokeStyle = "white";
-        ctx.strokeRect(OBSTACLE.x + 300, OBSTACLE.y + 100, OBSTACLE.width, OBSTACLE.height); 
+        ctx.strokeRect(OBSTACLE.x + 300, OBSTACLE.y + 100, OBSTACLE.width, OBSTACLE.height);
 
         obstacleFirstCollision();
         obstacleSecondCollision();
         obstacleThirdCollision();
     }
 }
+// ---------------------------------------------------------------------------------------------------------------------------//
+
+
 
 //--------------------------------------------------- Third Obstacle Draw -------------------------------------------------------//
 function obstacleThird() {
     if (gameLevel === 4) {
         //left obstacle
-         
+
         ctx.fillStyle = "yellow";
         ctx.fillRect(OBSTACLE.x - 300, OBSTACLE.y + 100, OBSTACLE.width, OBSTACLE.height);
 
@@ -517,123 +532,155 @@ function obstacleThird() {
     }
 }
 
+// function obstacleFourth() {
+//     if (gameLevel === 5) {
+//         ctx.fillStyle = "black";
+//         ctx.fillRect(OBSTACLE.x + 400, OBSTACLE.y + 200, OBSTACLE.width, OBSTACLE.height);
 
-//------------------------------------------------ Collision With First Obstacle --------------------------------------------//
-function obstacleFirstCollision() {
-    if (ball.x + ball.radius > OBSTACLE.x && ball.x - ball.radius < OBSTACLE.x + OBSTACLE.width && ball.y + ball.radius > OBSTACLE.y + 10 && ball.y - ball.radius < OBSTACLE.y + 10 + OBSTACLE.height) {
-        ball.dy = -ball.dy;
+//         ctx.strokeStyle = "white";
+//         ctx.strokeRect(OBSTACLE.x + 400, OBSTACLE.y + 200, OBSTACLE.width, OBSTACLE.height);
+
+
+//         ctx.fillStyle = "red";
+//         ctx.fillRect(OBSTACLE.x - 300, OBSTACLE.y + 100, OBSTACLE.width, OBSTACLE.height);
+
+//         ctx.strokeStyle = "white";
+//         ctx.strokeRect(OBSTACLE.x - 300, OBSTACLE.y + 100, OBSTACLE.width, OBSTACLE.height);
+
+//         obstacleSecondCollision();
+//         obstacleThirdCollision();
+//     }
+    // ---------------------------------------------------------------------------------------------------------------------------//
+
+
+
+    //------------------------------------------------ Collision With First Obstacle --------------------------------------------//
+    function obstacleFirstCollision() {
+        if (ball.x + ball.radius > OBSTACLE.x && ball.x - ball.radius < OBSTACLE.x + OBSTACLE.width && ball.y + ball.radius > OBSTACLE.y + 10 && ball.y - ball.radius < OBSTACLE.y + 10 + OBSTACLE.height) {
+            ball.dy = -ball.dy;
+        }
     }
-}
+    // ---------------------------------------------------------------------------------------------------------------------------//
 
-//------------------------------------------------ Collision With Second Obstacle --------------------------------------------//
-function obstacleSecondCollision() {
-    if (ball.x + ball.radius > OBSTACLE.x - 300 && ball.x - ball.radius < OBSTACLE.x - 300 + OBSTACLE.width && ball.y + ball.radius > OBSTACLE.y + 100 && ball.y - ball.radius < OBSTACLE.y + 100 + OBSTACLE.height) {
-        ball.dy = -ball.dy;
+
+    //------------------------------------------------ Collision With Second Obstacle --------------------------------------------//
+    function obstacleSecondCollision() {
+        if (ball.x + ball.radius > OBSTACLE.x - 300 && ball.x - ball.radius < OBSTACLE.x - 300 + OBSTACLE.width && ball.y + ball.radius > OBSTACLE.y + 100 && ball.y - ball.radius < OBSTACLE.y + 100 + OBSTACLE.height) {
+            ball.dy = -ball.dy;
+        }
     }
-}
+    // ---------------------------------------------------------------------------------------------------------------------------//
 
-//------------------------------------------------ Collision With Third Obstacle --------------------------------------------//
-function obstacleThirdCollision() {
-    if (ball.x + ball.radius > OBSTACLE.x + 300 && ball.x - ball.radius < OBSTACLE.x + 300 + OBSTACLE.width && ball.y + ball.radius > OBSTACLE.y + 100 && ball.y - ball.radius < OBSTACLE.y + 100 + OBSTACLE.height) {
-        ball.dy = -ball.dy;
+
+    //------------------------------------------------ Collision With Third Obstacle --------------------------------------------//
+    function obstacleThirdCollision() {
+        if (ball.x + ball.radius > OBSTACLE.x + 300 && ball.x - ball.radius < OBSTACLE.x + 300 + OBSTACLE.width && ball.y + ball.radius > OBSTACLE.y + 100 && ball.y - ball.radius < OBSTACLE.y + 100 + OBSTACLE.height) {
+            ball.dy = -ball.dy;
+        }
     }
-}
+    // ---------------------------------------------------------------------------------------------------------------------------//
 
-function obstacleFourthCollision() {
-    if (ball.x + ball.radius > OBSTACLE.x && ball.x - ball.radius < OBSTACLE.x + OBSTACLE.width && ball.y + ball.radius > OBSTACLE.y + 80 && ball.y - ball.radius < OBSTACLE.y + 80 + OBSTACLE.height) {
-        ball.dy = -ball.dy;
+
+    //------------------------------------------------ Collision With Fourth Obstacle --------------------------------------------//
+    function obstacleFourthCollision() {
+        if (ball.x + ball.radius > OBSTACLE.x && ball.x - ball.radius < OBSTACLE.x + OBSTACLE.width && ball.y + ball.radius > OBSTACLE.y + 80 && ball.y - ball.radius < OBSTACLE.y + 80 + OBSTACLE.height) {
+            ball.dy = -ball.dy;
+        }
     }
-}
-
-//---------------------------------------------- Calling Drawing Functions-----------------------------------------//
-
-function Draw() {
-    Paddle_Draw();
-    Ball_Draw();
-    Bricks_Draw();
-    DisplayGamePoints("Score:" + score, 35, 25);
-    localStorage.setItem("score", score); // storing scores in local storage
-
-    DisplayGamePoints("Life:" + maxLife, cvs.width - 85, 25);
-    DisplayGamePoints("Level:" + gameLevel, cvs.width / 2 - 40, 25);
-    DisplayGamePoints(playerName, cvs.width / 1.4, 25);
-    obstacleFirst();
-    obstacleSecond();
-    obstacleThird();
-}
-
-//----------------------------------------------------------------------------------------------------------------------//
+    // ---------------------------------------------------------------------------------------------------------------------------//
 
 
+    //---------------------------------------------- Calling Drawing Functions-----------------------------------------//
 
-//---------------------------------------------- Calling Updation Functions ---------------------------------------//
+    function Draw() {
+        Paddle_Draw();
+        Ball_Draw();
+        Bricks_Draw();
+        DisplayGamePoints("Score:" + score, 35, 25);
+        localStorage.setItem("score", score); // storing scores in local storage
 
-function update_all() {
-    Paddle_Move();
-    Ball_Move();
-    Ball_With_Wall_Collision();
-    Ball_With_Paddle_Collision();
-    Ball_With_Brick_Collision();
-    Game_End();
-    Level_Up();
-}
-
-let isPause = false;
-function pauseToggle() {
-    if (isPause === false) {
-        isPause = true;
+        DisplayGamePoints("Life:" + maxLife, cvs.width - 85, 25);
+        DisplayGamePoints("Level:" + gameLevel, cvs.width / 2 - 40, 25);
+        DisplayGamePoints(playerName, cvs.width / 1.4, 25);
+        obstacleFirst();
+        obstacleSecond();
+        obstacleThird();
+        // obstacleFourth();
     }
-    else {
-        isPause = false;
-    }
-    // console.log(isPause);
-}
+    //--------------------------------------------------------------------------------------------------------------------------//
 
-function loop() {
-    ctx.drawImage(BACKGROUND, 0, 0, 1200, 1000);
-    // music.play();
-    Draw();
-    if (!gameOver) {
+
+
+    //------------------------------------------------ Calling Updation Functions ----------------------------------------------//
+
+    function update_all() {
+        Paddle_Move();
+        Ball_Move();
+        Ball_With_Wall_Collision();
+        Ball_With_Paddle_Collision();
+        Ball_With_Brick_Collision();
+        Game_End();
+        Level_Up();
+    }
+
+    let isPause = false;
+    function pauseToggle() {
         if (isPause === false) {
-            update_all();
-            // console.log(isPause);
+            isPause = true;
         }
         else {
-            // console.log(isPause);
+            isPause = false;
         }
+        // console.log(isPause);
     }
-    else {
-        update_all();
-        return;
+
+    function loop() {
+        ctx.drawImage(BACKGROUND, 0, 0, 1200, 1000);
+        // music.play();
+        Draw();
+        if (!gameOver) {
+            if (isPause === false) {
+                update_all();
+                // console.log(isPause);
+            }
+            else {
+                // console.log(isPause);
+            }
+        }
+        else {
+            update_all();
+            return;
+        }
+        requestAnimationFrame(loop);
     }
+    loop();
     requestAnimationFrame(loop);
-}
-loop();
-requestAnimationFrame(loop);
-//--------------------------------------------------------------------------------------------------------------------------//
+
+
+    //--------------------------------------------------------------------------------------------------------------------------//
 
 
 
-// function loop() {
-//     ctx.drawImage(BACKGROUND, 0, 0, 1200, 1000);
-//     update();
-//     Draw();
-//     if (!gameOver) {
-//         requestAnimationFrame(loop);  
-//     }
-// }
-// loop();
-// requestAnimationFrame(loop);
+    // function loop() {
+    //     ctx.drawImage(BACKGROUND, 0, 0, 1200, 1000);
+    //     update();
+    //     Draw();
+    //     if (!gameOver) {
+    //         requestAnimationFrame(loop);  
+    //     }
+    // }
+    // loop();
+    // requestAnimationFrame(loop);
 
 
 
 
-//-------------------------------------------------------- Random Function--------------------------------------------------//
-function getRandomInt(min, max) {
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-}
+    //-------------------------------------------------------- Random Function--------------------------------------------------//
+    function getRandomInt(min, max) {
+        min = Math.ceil(min);
+        max = Math.floor(max);
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
 //--------------------------------------------------------------------------------------------------------------------------//
 
 
