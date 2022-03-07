@@ -10,7 +10,7 @@
 </head>
 
 
-<body>
+<body class="loginbody">
 
   <div class="login-box">
     <h1>Login</h1>
@@ -26,11 +26,11 @@
       </div>
 
       <div class="signup_link">
-        <button id="click" onclick = "Authentication()" class="btn">Login</button>
+        <button id="click" onclick="Authentication()" class="btn">Login</button>
       </div>
 
       <div class="signup_link">
-        Not a member? <a href="register.html" >Signup</a>
+        Not a member? <a href="index.html">Signup</a>
       </div>
     </div>
   </div>
@@ -64,10 +64,12 @@
     function Authentication() {
       let Username = document.getElementById('uname').value;
       let Password = document.getElementById('pass').value;
+
       db.ref('Registered Users').once('value')
         .then(function (snapshot) {
           // var count = 0;
           var flag = false;
+      
           snapshot.forEach((item) => {
             // console.log(item);
             // var flag = false;
@@ -77,10 +79,10 @@
             // console.log(pass);
             // console.log(Username, Password, uname, pass);
             // console.log(uname === Username && pass === Password);
-
-            if (uname === Username && pass === Password) {
+        
+            if(uname === Username && pass === Password) {
               flag = true;
-              window.location = "index.html";
+              window.location = "home.html";
               // const mytimeout = setTimeout(alert("Login Successful"), 1000);
             }
             // count++;
@@ -90,9 +92,9 @@
             //   }
             // }
           });
-
+         
           if (flag === false) {
-            alert("Username Or Password Is Incorrect");
+            alert("Invalid Username Or Password!");
           }
         })
         .catch((error) => {
@@ -102,7 +104,7 @@
 
     }
     function login(user) {
-      window.location = "index.html";
+      window.location = "home.html";
     }
 
 

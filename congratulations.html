@@ -42,7 +42,7 @@
         <script>    
             Gamewon.play();
         </script>
-        <a href="index.html" style="float: center;"><input type="button" value="Play Again" class="btn btn-primary"
+        <a href="home.html" style="float: center;"><input type="button" value="Play Again" class="btn btn-primary"
                 id="btn3"></a>
 
         <a href="leaderboard.html"><button type="button" class="btn btn-primary" id="btn3" data-bs-toggle="modal"
@@ -50,6 +50,40 @@
                 Show Leader Board
             </button></a>
     </div>
+        <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.7/firebase-app.js";
+
+        import { getDatabase, set, ref, child, get, onValue, update }
+            from "https://www.gstatic.com/firebasejs/9.6.7/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDzBeh1scj-vECh-Rh2dQnLSf5O3XyTrGA",
+            authDomain: "breakout-game-3710f.firebaseapp.com",
+            databaseURL: "https://breakout-game-3710f-default-rtdb.firebaseio.com",
+            projectId: "breakout-game-3710f",
+            storageBucket: "breakout-game-3710f.appspot.com",
+            messagingSenderId: "602197715891",
+            appId: "1:602197715891:web:5b01f760950f470c4ef9c6"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+
+        // const db = getDatabase();
+        const db = getDatabase();
+        let u_name = localStorage.getItem("user_name");
+        const initialDataRef = ref(db, 'Registered Users');
+
+
+        let score_data = localStorage.getItem("score");
+        onValue(initialDataRef, (snapshot) => {
+            const data = snapshot.val();
+            update(ref(db, "Registered Users/" + u_name), {
+                score: score_data
+            })
+        });
+    </script>
+    </script>
 </body>
 
 </html>

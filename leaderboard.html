@@ -22,13 +22,12 @@
         }
 
         div {
-            margin-top: 80px; 
+            margin-top: 80px;
         }
 
-        #btn1{
+        #btn1 {
             margin-right: 500px;
         }
-
     </style>
 
 </head>
@@ -42,17 +41,17 @@
         <table class="table table-hover table-dark w-100 p-4">
             <thead>
                 <tr>
-                    <th scope="col">S.No.</td>
+                    <th scope="col">S.No. </td>
                     <th scope="col">Name</td>
-                    <th scope="col">Score</td>
+                    <th scope="col">Score </td>
                 </tr>
             </thead>
             <tbody id='tb1'>
 
             </tbody>
         </table>
-        <a href="index.html" style="float: right;"><input type="button" value="Play Again" class="btn btn-primary"
-            id="btn1"></a>
+        <a href="home.html" style="float: right;"><input type="button" value="Play Again" class="btn btn-primary"
+                id="btn1"></a>
     </div>
 
 
@@ -92,7 +91,7 @@
                     let tb1innerHtml = "";
                     let counter = 1;
                     dataArr.forEach(e => {
-                        console.log(typeof(e.score));
+                        // console.log(typeof(e.score));
                         tb1innerHtml = tb1innerHtml + `<tr>` +
                             `<th scope="row">${counter}</td>` +
                             `<td>${e.uname}</td>` +

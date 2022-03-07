@@ -79,7 +79,7 @@
 
 /* / Custom Modal CSS / */
 .modal_wrapper .modal-content {
-    background-image: url('./images/bg.jpg');
+    /* background-image: url('./images/bg.jpg'); */
     background-position: center center;
     background-size: cover;
     background-repeat: no-repeat;
