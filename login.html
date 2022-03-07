@@ -66,27 +66,34 @@
       let Password = document.getElementById('pass').value;
       db.ref('Registered Users').once('value')
         .then(function (snapshot) {
-          var count = 0;
+          // var count = 0;
+          var flag = false;
           snapshot.forEach((item) => {
-            var flag = false;
+            // console.log(item);
+            // var flag = false;
             uname = item.val().uname;
             pass = item.val().pass;
-            console.log(uname);
-            console.log(pass);
+            // console.log(uname);
+            // console.log(pass);
+            // console.log(Username, Password, uname, pass);
+            // console.log(uname === Username && pass === Password);
 
             if (uname === Username && pass === Password) {
               flag = true;
               window.location = "index.html";
               // const mytimeout = setTimeout(alert("Login Successful"), 1000);
-
             }
-            count++;
-            if (count === snapshot.numChildren()) {
-              if (flag = false) {
-                alert("Username Or Password Is Incorrect");
-              }
-            }
+            // count++;
+            // if (count === snapshot.numChildren()) {
+            //   if (flag === false) {
+            //     alert("Username Or Password Is Incorrect");
+            //   }
+            // }
           });
+
+          if (flag === false) {
+            alert("Username Or Password Is Incorrect");
+          }
         })
         .catch((error) => {
           console.log(error);
