@@ -336,14 +336,14 @@ function Ball_With_Brick_Collision() {
                         case 'S': paddle.width = paddle.width - 5;
                             break;
 
-                        case 'L': paddle.width = paddle.width + 15;
+                        case 'L': paddle.width = paddle.width + 5;
                             breakout.play();
                             break;
 
                         case '-L': if (maxLife > 1) {
                             // maxLife = maxLife - 1
                             LifeDecrease.play();
-                            // ball.speed += 0.5;
+                            ball.speed += 0.1;
                             // paddle.speed += 1.5;
                         }
                             break;
@@ -408,8 +408,8 @@ function Level_Up() {
         levelCompleted.play();
         brick.row++;
         Bricks_Creation();
-        ball.speed += 0.6; //on level up ball speed will increase
-        paddle.dx += 0.6; // on level up paddle speed will increase
+        ball.speed += 0.4; //on level up ball speed will increase
+        paddle.dx += 0.3; // on level up paddle speed will increase
         // brick.marginTop += 30;
         Ball_Reset();
         gameLevel++;
@@ -574,6 +574,7 @@ function obstacleThird() {
 
     }
 }
+//---------------------------------------------- Level Fift Obstacle Added ----------------------------------------------//
 
 function obstacleFourth() {
     if (gameLevel === 5) {
@@ -659,39 +660,75 @@ console.log(rightInterval);
 console.log(typeof (rightInterval) == "undefined");
 
 
-leftBtn.addEventListener("mousedown", () => {
-    if (typeof (rightInterval) != "undefined") {
+leftBtn.addEventListener("touchstart",()=>{
+    if(typeof(rightInterval) != "undefined"){
         clearInterval(rightInterval);
     }
-    lefttInterval = setInterval(function () {
-        if (leftBtn && paddle.x > 0 && isPause === false) {
+    lefttInterval = setInterval(function (){
+        if(leftBtn && paddle.x > 0){
             paddle.x -= paddle.dx;
         }
 
     }, 10);
 });
 
-leftBtn.addEventListener("mouseup", () => {
-    if (typeof (lefttInterval) != "undefined") {
+leftBtn.addEventListener("touchend",()=>{
+    if(typeof(lefttInterval) != "undefined"){
         clearInterval(lefttInterval);
     }
 });
 
-rightBtn.addEventListener("mousedown", () => {
-    if (typeof (lefttInterval) != "undefined") {
+rightBtn.addEventListener("touchstart",()=>{			
+    if(typeof(lefttInterval) != "undefined"){
         clearInterval(lefttInterval);
     }
-    rightInterval = setInterval(function () {
-        if (rightBtn && paddle.x + paddle.width < cvs.width && isPause === false) {
-            paddle.x += paddle.dx;
+    rightInterval = setInterval(function (){
+        if (rightBtn && paddle.x + paddle.width < cvs.width) {
+                paddle.x += paddle.dx;
         }
     }, 10);
 });
-rightBtn.addEventListener("mouseup", () => {
-    if (typeof (rightInterval) != "undefined") {
+
+
+rightBtn.addEventListener("touchend",()=>{
+    if(typeof(rightInterval) != "undefined"){
         clearInterval(rightInterval);
     }
 });
+
+// leftBtn.addEventListener("mousedown", () => {
+//     if (typeof (rightInterval) != "undefined") {
+//         clearInterval(rightInterval);
+//     }
+//     lefttInterval = setInterval(function () {
+//         if (leftBtn && paddle.x > 0 && isPause === false) {
+//             paddle.x -= paddle.dx;
+//         }
+
+//     }, 10);
+// });
+
+// leftBtn.addEventListener("mouseup", () => {
+//     if (typeof (lefttInterval) != "undefined") {
+//         clearInterval(lefttInterval);
+//     }
+// });
+
+// rightBtn.addEventListener("mousedown", () => {
+//     if (typeof (lefttInterval) != "undefined") {
+//         clearInterval(lefttInterval);
+//     }
+//     rightInterval = setInterval(function () {
+//         if (rightBtn && paddle.x + paddle.width < cvs.width && isPause === false) {
+//             paddle.x += paddle.dx;
+//         }
+//     }, 10);
+// });
+// rightBtn.addEventListener("mouseup", () => {
+//     if (typeof (rightInterval) != "undefined") {
+//         clearInterval(rightInterval);
+//     }
+// });
 // ---------------------------------------------------------------------------------------------------------------------------//
 
 
