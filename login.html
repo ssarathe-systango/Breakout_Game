@@ -51,7 +51,7 @@
     };
 
 
-    //------------------------------------------------------ Initializing Firebase ------------------------------------------------>
+    //------------------------------------------------------ Initialization of Firebase ------------------------------------------------>
 
     const app = firebase.initializeApp(firebaseConfig);
 
@@ -62,14 +62,14 @@
 
 
     function Authentication() {
-      let Username = document.getElementById('uname').value;
+      let Username = document.getElementById('uname').value.trim();
       let Password = document.getElementById('pass').value;
 
       db.ref('Registered Users').once('value')
         .then(function (snapshot) {
           // var count = 0;
           var flag = false;
-      
+
           snapshot.forEach((item) => {
             // console.log(item);
             // var flag = false;
@@ -79,20 +79,16 @@
             // console.log(pass);
             // console.log(Username, Password, uname, pass);
             // console.log(uname === Username && pass === Password);
-        
-            if(uname === Username && pass === Password) {
+
+            if (uname === Username && pass === Password) {
               flag = true;
+              localStorage.setItem("user_name", uname);
+
               window.location = "home.html";
-              // const mytimeout = setTimeout(alert("Login Successful"), 1000);
             }
-            // count++;
-            // if (count === snapshot.numChildren()) {
-            //   if (flag === false) {
-            //     alert("Username Or Password Is Incorrect");
-            //   }
-            // }
+
           });
-         
+
           if (flag === false) {
             alert("Invalid Username Or Password!");
           }

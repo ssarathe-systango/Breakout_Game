@@ -40,8 +40,6 @@ paddleHit.src = ('./sounds/mixkit-negative-tone-interface-tap-2569.wav'); // Pad
 
 const LifeDecrease = new Audio();
 LifeDecrease.src = ('./sounds/smb_warning.wav'); // On Hit Red Bricks
-
-
 // ---------------------------------------------------------------------------------------------------------------------------//
 
 
@@ -81,10 +79,11 @@ const paddle = {
 
 function Paddle_Draw() {
     ctx.fillStyle = "yellow";
+
     ctx.fillRect(paddle.x, paddle.y, paddle.width, paddle.height);
 
     ctx.strokeStyle = "yellow";
-    ctx.strokeRect(paddle.x, paddle.y, paddle.width, paddle.height);
+    // ctx.strokeRect(paddle.x, paddle.y, paddle.width, paddle.height);
 }
 // ---------------------------------------------------------------------------------------------------------------------------//
 
@@ -181,10 +180,10 @@ function Ball_With_Wall_Collision() {
     if (ball.y - ball.radius < 0) {
         ball.dy = -ball.dy;
     }
-    if (ball.y + ball.radius > cvs.height) {
-        maxLife--;
-        Ball_Reset();
-        ballLost.play();
+    if (ball.y + ball.radius > cvs.height) {  // ball goes outside of canvas  
+        maxLife--; // life will decrease
+        Ball_Reset(); // Ball will reset
+        ballLost.play(); 
     }
 }
 //-------------------------------------------------------------------------------------------------------------------------------//
@@ -215,7 +214,8 @@ function Reset_Life() {
 
 //----------------------------------------------------- Ball / Paddle Collision ------------------------------------------------//
 function Ball_With_Paddle_Collision() {
-    if (ball.x < paddle.x + paddle.width && ball.x > paddle.x && ball.y < paddle.y + paddle.height && ball.y > paddle.y) {
+    if (ball.x < paddle.x + paddle.width && ball.x > paddle.x && 
+        (ball.y + ball.radius) < paddle.y + paddle.height && (ball.y + ball.radius) > paddle.y) {
         paddleHit.play();
         let collidePoint = ball.x - (paddle.x + paddle.width / 2);
 
@@ -236,9 +236,10 @@ const brick = {
     row: 2,
     column: 12,
     width: 80,
+    // spaceFactor : 2,
     height: 15,
-    offSetLeft: 8,
-    offSetTop: 10,
+    offSetLeft: 9,
+    offSetTop: 8,
     marginTop: 40,
     fillColor: " #004080",
     strokeColor: "white"
@@ -249,7 +250,7 @@ const COLORS = {
     'L': 'blue',    // Increase paddle length
     'N': 'white',
     '+L': 'green',   // Life++
-    '-L': 'red'      // Life--
+    '-L': 'red'      // Increase ball speed
 }
 
 const STROKCOLORS = {
@@ -270,7 +271,6 @@ let power = ['N', 'L', 'N', 'N', 'N', 'N', 'S', 'N', 'N', 'N', '-L', 'N', '+L', 
 
 //------------------------------------------------- Array for Bricks Creation --------------------------------------------------//
 let bricks = [];
-
 function Bricks_Creation() {
     for (let r = 0; r < brick.row; r++) {
         bricks[r] = [];
@@ -279,7 +279,8 @@ function Bricks_Creation() {
                 x: c * (brick.offSetLeft + brick.width) + brick.offSetLeft, // for column
                 y: r * (brick.offSetTop + brick.height) + brick.offSetTop + brick.marginTop, // for row
                 power: power[getRandomInt(0, power.length)], // Random loop is running 0 to power.length
-                status: true, // bricks creation status, if it will false bricks will not create
+                // status: (c===r) ? false : true,// bricks creation status, if it will false bricks will not create
+                status : true,
                 strength: getRandomInt(1, 2) // distroy bricks randomly, maximum 2 hit allowed.
             }
         }
@@ -316,9 +317,15 @@ function Ball_With_Brick_Collision() {
         for (let c = 0; c < brick.column; c++) {
             let b = bricks[r][c];
             if (b.status) {
-                if (ball.x + ball.radius > b.x && ball.x - ball.radius < b.x + brick.width && ball.y + ball.radius > b.y && ball.y - ball.radius < b.y + brick.height) {
-                    ball.dy = -ball.dy;
+                if (ball.x + ball.radius > b.x &&
+                    ball.x - ball.radius < b.x + brick.width &&
+                    ball.y + ball.radius > b.y && 
+                    ball.y - ball.radius < b.y + brick.height) 
+                    {
+
+                    ball.dy = -ball.dy; // reverse condition of ball after destroy brick
                     brickhit.play();
+
                     b.strength = b.strength - 1;
 
                     // when strength = 0 then brick will destroy.
@@ -374,14 +381,13 @@ function DisplayGamePoints(text, textX, textY) {
 
 
 
-
 //---------------------------------------------------- Game Over Condition ------------------------------------------------------//
 function Game_End() {
 
     if (maxLife <= 0) {
         gameOver = true;
-        DisplayGamePoints("Game Over", cvs.width / 2 - 50, cvs.height / 2);
-        DisplayGamePoints("Play Again !", cvs.width / 2 - 50, cvs.height / 2 + 30);
+        // DisplayGamePoints("Game Over", cvs.width / 2 - 50, cvs.height / 2);
+        // DisplayGamePoints("Play Again !", cvs.width / 2 - 50, cvs.height / 2 + 30);
         // game over sound 
         window.location.href = "gameover.html";
     }
@@ -408,12 +414,13 @@ function Level_Up() {
         levelCompleted.play();
         brick.row++;
         Bricks_Creation();
-        ball.speed += 0.4; //on level up ball speed will increase
-        paddle.dx += 0.3; // on level up paddle speed will increase
+        ball.speed += 0.3;0 //on level up ball speed will increase
+        paddle.dx += 0.5; // on level up paddle speed will increase
         // brick.marginTop += 30;
         Ball_Reset();
         gameLevel++;
         Reset_Life();
+       
     }
 
 }
@@ -487,6 +494,7 @@ function obstacleFirst() {
     // Middle Obstacle
     if (gameLevel === 2) {
 
+        
         ctx.fillStyle = "black";
         ctx.fillRect(OBSTACLE.x + 300, OBSTACLE.y + 100, OBSTACLE.width, OBSTACLE.height);
 
@@ -689,7 +697,6 @@ rightBtn.addEventListener("touchstart",()=>{
     }, 10);
 });
 
-
 rightBtn.addEventListener("touchend",()=>{
     if(typeof(rightInterval) != "undefined"){
         clearInterval(rightInterval);
@@ -765,8 +772,8 @@ function update_all() {
     Game_End();
     Level_Up();
 }
-
-let isPause = false;
+// ------------------------------------------------------- Pause Function ----------------------------------------------------- //
+let isPause = true;
 function pauseToggle() {
     if (isPause === false) {
         isPause = true;
@@ -776,7 +783,11 @@ function pauseToggle() {
     }
     // console.log(isPause);
 }
+// --------------------------------------------------------------------------------------------------------------------------//
 
+
+
+// ------------------------------------------------------------ Loop function --------------------------------------------- //
 function loop() {
     ctx.drawImage(BACKGROUND, 0, 0, 1200, 1000);
     // music.play();
@@ -796,10 +807,35 @@ function loop() {
     }
     requestAnimationFrame(loop);
 }
+// --------------------------------------------------------------------------------------------------------------------------//
+
+
+// ---------------------------------------------------------- Timer For Game Start ----------------------------------------- //
+// var counter = 4;
+// function print() {
+//     if (counter > 1) {
+//         document.getElementById("counter").innerHTML = counter - 1;
+//     } else {
+//         document.getElementById("counter").innerHTML = "Go";
+//     }
+//     if (counter == 0) {
+//         isPause = false;
+//         document.getElementById("counter").style.display = "none";
+//     }
+//     counter--;
+// }
+// var intervalid = setInterval(() => {
+//     print();
+//     if (counter < 0) {
+//         clearInterval(intervalid);
+//     }
+// }, 2000);
+// --------------------------------------------------------------------------------------------------------------------------//
 loop();
 requestAnimationFrame(loop);
-//--------------------------------------------------------------------------------------------------------------------------//
 
+
+//--------------------------------------------------------------------------------------------------------------------------//
 
 
 // function loop() {
@@ -812,7 +848,6 @@ requestAnimationFrame(loop);
 // }
 // loop();
 // requestAnimationFrame(loop);
-
 
 
 

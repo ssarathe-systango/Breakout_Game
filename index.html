@@ -8,7 +8,7 @@
 
 </head>
 
-<body class = "registerbody">
+<body class="registerbody">
   <center>
     <h1 style="color: white; font-size: 45px;">
       WELCOME TO BREAKOUT GAME !
@@ -69,23 +69,33 @@
 
     // ----------------------------------------------------- Initialize Firebase ---------------------------------------------//
     const app = initializeApp(firebaseConfig);
-
+    const arr = ["@", "#", "$", "%", "&", "/", "*", "-", "~", "[", "]", "{", "}", "?", ";", ":"];
     const db = getDatabase();
     // const ref1 = ref(db, "Registered Users");
     function writeUserData() {
 
-      let Username = document.getElementById('uname').value;
+      let isValid = true;
+      let Username = document.getElementById('uname').value.trim();
       let Password = document.getElementById('pass').value;
+
       localStorage.setItem("user_name", Username);
 
+      // validation for special characters 
+      arr.forEach(check => {
+        if (Username.includes(check)) {
+          isValid = false;
+          alert('Invalid Characters!');
+          location.reload();
+        }
+      });
 
+      // Player Registration
       let gameUniqueId = Username;
       set(ref(db, "Registered Users/" + gameUniqueId), {
         score: 0,
         uname: Username,
         pass: Password,
-      })
-      alert('Player Registered');
+      }).then(() => { alert('Player Registered'); })
     }
 
     var register = document.getElementById('RegisterBtn');
@@ -109,5 +119,3 @@
 // let id = ref.push(data);
 // -----------------------------------------------------------------------------------------------------------------------//
 -->
-
-

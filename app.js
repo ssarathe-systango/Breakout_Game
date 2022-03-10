@@ -1,3 +1,5 @@
+//******************************************* */
+
 function determineAppServerKey() {
   var vapidPublicKey = "BL-WlSnp4PfwthxLl8e1E3cY4uzVzHtNrziJEXo58bc7-cp4BxKHW2ovrYM_dQyL8jjljpgHy4KIgMWQ7rNTpeQ";
   return urlBase64ToUint8Array(vapidPublicKey);
@@ -21,7 +23,7 @@ function urlBase64ToUint8Array(base64String) {
 if ("serviceWorker" in navigator) {
   // window.addEventListener("load", function () {
     navigator.serviceWorker
-      .register("/sw.js")
+      .register("/SW.js")
       .then(
         async (response) => {
           const subscription = await response.pushManager.getSubscription();
