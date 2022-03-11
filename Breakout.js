@@ -58,7 +58,7 @@ let space = false; /// Bind Space for Start/Pause
 let maxLife = 4;
 let score = 0;
 let scoreCount = 5; // you will get 5 points per brick collision
-let gameLevel = 5;
+let gameLevel = 1;
 let maxLevel = 5;
 let gameOver = false;
 
